@@ -6,44 +6,45 @@
 
 <div class="row mb-3">
     <div class="col-md-12">
-        <a href="<?= base_url('patients/create') ?>" class="btn btn-primary">+ Registrar Paciente</a>
+        <a href="<?= base_url('patients/create') ?>" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Registrar Paciente
+        </a>
     </div>
 </div>
+
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+<?php endif; ?>
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+<?php endif; ?>
 
 <?php if (empty($patients)): ?>
     <div class="alert alert-info">No hay pacientes registrados aún.</div>
 <?php else: ?>
 <div class="table-responsive">
     <table class="table table-bordered table-striped" id="dataTable">
-        <thead class="table-dark">
+        <thead class="table-white">
             <tr>
                 <th>#</th>
-                <th>Código</th>
-                <th>Nombre completo</th>
-                <th>Género</th>
+                <th>Nombre Completo</th>
+                <th>Historial Clínico</th>
+                <th>Categoría</th>
+                <th>Correo Electrónico</th>
                 <th>Teléfono</th>
-                <th>Email</th>
-                <th>Tipo de sangre</th>
-                <th>Estado</th>
+                <th>Dirección</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($patients as $p): ?>
             <tr>
-                <td><?= $p['id'] ?></td>
-                <td><?= esc($p['code']) ?></td>
-                <td><?= esc($p['first_name'] . ' ' . $p['last_name']) ?></td>
-                <td><?= esc($p['gender']) ?></td>
-                <td><?= esc($p['phone'] ?? '-') ?></td>
-                <td><?= esc($p['email'] ?? '-') ?></td>
-                <td><?= esc($p['blood_type'] ?? '-') ?></td>
-                <td>
-                    <?php if ($p['is_active']): ?>
-                        <span class="badge bg-success">Activo</span>
-                    <?php else: ?>
-                        <span class="badge bg-secondary">Inactivo</span>
-                    <?php endif; ?>
-                </td>
+                <td><?= $p['idPaciente_pac'] ?></td>
+                <td><?= esc($p['nombreCompleto_pac']) ?></td>
+                <td><?= esc($p['historialClinico_pac']) ?></td>
+                <td><?= esc($p['categoriaPaciente_pac']) ?></td>
+                <td><?= esc($p['correoElectronico_pac'] ?? '-') ?></td>
+                <td><?= esc($p['telefono_pac'] ?? '-') ?></td>
+                <td><?= esc($p['direccion_pac'] ?? '-') ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>

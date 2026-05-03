@@ -91,43 +91,61 @@
                         <!-- Dashboard -->
                         <li class="nav-item <?= (uri_string() === '' || uri_string() === 'dashboard') ? 'active' : '' ?>">
                             <a href="<?= base_url('dashboard') ?>">
-                                <i class="fas fa-home"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <!-- Citas -->
-                        <li class="nav-item <?= strpos(uri_string(), 'appointments') !== false ? 'active' : '' ?>">
-                            <a href="<?= base_url('appointments') ?>">
-                                <i class="fas fa-calendar-check"></i>
-                                <p>Citas Médicas</p>
+                                <i class="fas fa-home"></i><p>Dashboard</p>
                             </a>
                         </li>
                         <!-- Pacientes -->
                         <li class="nav-item <?= strpos(uri_string(), 'patients') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('patients') ?>">
-                                <i class="fas fa-users"></i>
-                                <p>Pacientes</p>
+                                <i class="fas fa-users"></i><p>Pacientes</p>
                             </a>
                         </li>
-                        <!-- Doctores -->
-                        <li class="nav-item <?= strpos(uri_string(), 'doctors') !== false ? 'active' : '' ?>">
-                            <a href="<?= base_url('doctors') ?>">
-                                <i class="fas fa-user-md"></i>
-                                <p>Doctores</p>
+                        <!-- Citas -->
+                        <li class="nav-item <?= strpos(uri_string(), 'appointments') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('appointments') ?>">
+                                <i class="fas fa-calendar-check"></i><p>Citas Médicas</p>
                             </a>
                         </li>
-                        <!-- Estadísticas
-                        <li class="nav-item <?= strpos(uri_string(), 'statistics') !== false ? 'active' : '' ?>">
-                            <a href="<?= base_url('statistics') ?>">
-                                <i class="bi bi-bar-chart-fill"></i>
-                                <p>Estadísticas</p>
+                        <!-- Servicios -->
+                        <li class="nav-item <?= strpos(uri_string(), 'servicios') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('servicios') ?>">
+                                <i class="fas fa-stethoscope"></i><p>Servicios Médicos</p>
                             </a>
-                        </li> -->
+                        </li>
+                        <!-- Personal -->
+                        <li class="nav-item <?= strpos(uri_string(), 'personal') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('personal') ?>">
+                                <i class="fas fa-user-md"></i><p>Personal Médico</p>
+                            </a>
+                        </li>
+                        <!-- Análisis -->
+                        <li class="nav-item <?= strpos(uri_string(), 'analisis') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('analisis') ?>">
+                                <i class="fas fa-chart-bar"></i><p>Análisis Mercado</p>
+                            </a>
+                        </li>
+                        <!-- Atención -->
+                        <li class="nav-item <?= strpos(uri_string(), 'atencion') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('atencion') ?>">
+                                <i class="fas fa-hand-holding-heart"></i><p>Planes de Atención</p>
+                            </a>
+                        </li>
+                        <!-- Plan Estratégico -->
+                        <li class="nav-item <?= strpos(uri_string(), 'plan') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('plan') ?>">
+                                <i class="fas fa-bullseye"></i><p>Plan Estratégico</p>
+                            </a>
+                        </li>
+                        <!-- Sistema -->
+                        <li class="nav-item <?= strpos(uri_string(), 'sistema') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('sistema') ?>">
+                                <i class="fas fa-cog"></i><p>Usuarios Sistema</p>
+                            </a>
+                        </li>
                         <!-- Cerrar sesión -->
                         <li class="nav-item">
                             <a href="<?= base_url('logout') ?>">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <p>Cerrar Sesión</p>
+                                <i class="fas fa-sign-out-alt"></i><p>Cerrar Sesión</p>
                             </a>
                         </li>
                     </ul>

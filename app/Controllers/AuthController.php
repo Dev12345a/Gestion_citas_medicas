@@ -19,8 +19,8 @@ class AuthController extends BaseController
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
-        // Usuario quemado en el controlador (sin BD)
-        if ($username === 'admin' && $password === '1234') {
+        // Usuario quemado en el controlador (sin BD) — MVP académico
+        if ($username === 'admin' && $password === '123') {
             session()->set([
                 'logged_in' => true,
                 'user_name' => 'Administrador',

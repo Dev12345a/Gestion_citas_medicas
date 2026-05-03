@@ -13,32 +13,39 @@ class PatientController extends BaseController
         $this->patientModel = new PatientModel();
     }
 
+    /**
+     * Listado de pacientes.
+     */
     public function index()
     {
         $data['patients'] = $this->patientModel->findAll();
         return view('patients/index', $data);
     }
 
+    /**
+     * Formulario para registrar nuevo paciente.
+     */
     public function create()
     {
         return view('patients/create');
     }
 
+    /**
+     * Guardar nuevo paciente en la BD.
+     */
     public function store()
     {
         $rules = [
-            'code'       => 'required|min_length[3]|max_length[50]',
-            'first_name' => 'required|regex_match[/^[A-Za-záéíóúÁÉÍÓÚñÑüÜ\s]+$/u]',
-            'last_name'  => 'required|regex_match[/^[A-Za-záéíóúÁÉÍÓÚñÑüÜ\s]+$/u]',
-            'gender'     => 'required|in_list[M,F,O]',
+            'nombreCompleto_pac'   => 'required|min_length[3]|max_length[150]',
+            'categoriaPaciente_pac'=> 'required',
+            'correoElectronico_pac'=> 'permit_empty|valid_email',
+            'telefono_pac'         => 'permit_empty|max_length[20]',
         ];
 
         $messages = [
-            'first_name' => [
-                'regex_match' => 'El campo Nombre(s) solo debe contener letras y espacios (sin números).',
-            ],
-            'last_name' => [
-                'regex_match' => 'El campo Apellidos solo debe contener letras y espacios (sin números).',
+            'nombreCompleto_pac' => [
+                'required'   => 'El nombre completo es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 3 caracteres.',
             ],
         ];
 
@@ -48,22 +55,23 @@ class PatientController extends BaseController
             );
         }
 
-        $data = $this->request->getPost();
-        $data['is_active'] = $this->request->getPost('is_active') ? 1 : 0;
+        $data = [
+            'nombreCompleto_pac'    => $this->request->getPost('nombreCompleto_pac'),
+            'historialClinico_pac'  => $this->request->getPost('historialClinico_pac'),
+            'categoriaPaciente_pac' => $this->request->getPost('categoriaPaciente_pac'),
+            'correoElectronico_pac' => $this->request->getPost('correoElectronico_pac'),
+            'telefono_pac'          => $this->request->getPost('telefono_pac'),
+            'direccion_pac'         => $this->request->getPost('direccion_pac'),
+        ];
 
-        // Verificar código único
-        if (!$this->patientModel->validateCode($data['code'])) {
-            return redirect()->back()->withInput()->with('error', 'El código ya está registrado. Usa uno diferente.');
-        }
-
-        if ($this->patientModel->save($data)) {
+        if ($this->patientModel->insert($data)) {
             return redirect()->to(base_url('patients'))->with('success', 'Paciente registrado correctamente.');
         }
 
-        return redirect()->back()->withInput()->with('error', 'Error al guardar el paciente. Intente nuevamente.');
+        return redirect()->back()->withInput()->with('error', 'Error al guardar. Intente nuevamente.');
     }
 
-    // ── Métodos conservados para no romrar rutas existentes ──
+    // ── Stubs para no romper rutas existentes ────────────────
 
     public function show(int $id)
     {
@@ -87,7 +95,6 @@ class PatientController extends BaseController
 
     public function validateCode(string $code)
     {
-        $isValid = $this->patientModel->validateCode($code);
-        return $this->response->setJSON(['data' => $isValid ? [] : ['exists' => true]]);
+        return $this->response->setJSON(['data' => []]);
     }
 }
