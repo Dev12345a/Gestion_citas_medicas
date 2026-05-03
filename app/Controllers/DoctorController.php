@@ -2,56 +2,45 @@
 
 namespace App\Controllers;
 
-use App\Models\DoctorModel;
-
+/**
+ * DoctorController — MVP stub.
+ * El módulo de médicos no está implementado en esta fase del proyecto.
+ * Todas las rutas redirigen al Dashboard para evitar errores.
+ */
 class DoctorController extends BaseController
 {
-    protected DoctorModel $doctorModel;
-
-    public function __construct()
-    {
-        $this->doctorModel = new DoctorModel();
-    }
-
-    /**
-     * Lista todos los doctores con JOIN de especialidad.
-     */
     public function index()
     {
-        $data['doctors'] = $this->doctorModel->getWithSpecialty();
-        return view('doctors/index', $data);
+        return redirect()->to(base_url('dashboard'))->with('error', 'El módulo de Médicos no está disponible en esta versión del MVP.');
     }
-
-    // ── Stubs para no romper rutas existentes ──
 
     public function create()
     {
-        return redirect()->to(base_url('doctors'));
+        return redirect()->to(base_url('dashboard'));
     }
 
     public function store()
     {
-        return redirect()->to(base_url('doctors'));
+        return redirect()->to(base_url('dashboard'));
     }
 
     public function edit(int $id)
     {
-        return redirect()->to(base_url('doctors'));
+        return redirect()->to(base_url('dashboard'));
     }
 
     public function update(int $id)
     {
-        return redirect()->to(base_url('doctors'));
+        return redirect()->to(base_url('dashboard'));
     }
 
     public function delete(int $id)
     {
-        return redirect()->to(base_url('doctors'));
+        return redirect()->to(base_url('dashboard'));
     }
 
     public function bySpecialty(int $specialtyId)
     {
-        $doctors = $this->doctorModel->getBySpecialty($specialtyId);
-        return $this->response->setJSON($doctors);
+        return $this->response->setJSON([]);
     }
 }

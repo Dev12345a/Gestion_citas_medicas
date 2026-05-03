@@ -5,117 +5,73 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
 
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
         <?php endif; ?>
 
         <div class="card">
-            <div class="card-header"><strong>Formulario de Registro</strong></div>
+            <div class="card-header"><strong>Formulario de Registro de Paciente</strong></div>
             <div class="card-body">
-                <form method="POST" action="<?= base_url('patients/store') ?>" novalidate>
+                <form method="POST" action="<?= base_url('patients/store') ?>">
                     <?= csrf_field() ?>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="code" class="form-label">Código del Paciente *</label>
-                            <input type="text" id="code" name="code" class="form-control"
-                                   value="<?= old('code') ?>"
-                                   placeholder="Ej: PAC-011" required>
-                            <div class="form-text">Solo letras, números y guiones.</div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="gender" class="form-label">Género *</label>
-                            <select id="gender" name="gender" class="form-select" required>
-                                <option value="">-- Seleccionar --</option>
-                                <option value="M" <?= old('gender') === 'M' ? 'selected' : '' ?>>Masculino</option>
-                                <option value="F" <?= old('gender') === 'F' ? 'selected' : '' ?>>Femenino</option>
-                                <option value="O" <?= old('gender') === 'O' ? 'selected' : '' ?>>Otro</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="first_name" class="form-label">Nombre(s) *</label>
-                            <input type="text" id="first_name" name="first_name" class="form-control"
-                                   value="<?= old('first_name') ?>"
-                                   pattern="[A-Za-záéíóúÁÉÍÓÚñÑüÜ\s]+"
-                                   title="Solo letras y espacios"
-                                   placeholder="Solo letras" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="last_name" class="form-label">Apellidos *</label>
-                            <input type="text" id="last_name" name="last_name" class="form-control"
-                                   value="<?= old('last_name') ?>"
-                                   pattern="[A-Za-záéíóúÁÉÍÓÚñÑüÜ\s]+"
-                                   title="Solo letras y espacios"
-                                   placeholder="Solo letras" required>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="date_of_birth" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" id="date_of_birth" name="date_of_birth" class="form-control"
-                                   value="<?= old('date_of_birth') ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="blood_type" class="form-label">Tipo de Sangre</label>
-                            <select id="blood_type" name="blood_type" class="form-select">
-                                <option value="Desconocido">Desconocido</option>
-                                <?php foreach (['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $bt): ?>
-                                    <option value="<?= $bt ?>" <?= old('blood_type') === $bt ? 'selected' : '' ?>>
-                                        <?= $bt ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="phone" class="form-label">Teléfono</label>
-                            <input type="text" id="phone" name="phone" class="form-control"
-                                   value="<?= old('phone') ?>"
-                                   pattern="[0-9\+\-\s]+"
-                                   title="Solo números"
-                                   placeholder="Solo números">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" id="email" name="email" class="form-control"
-                                   value="<?= old('email') ?>"
-                                   placeholder="correo@ejemplo.com">
-                        </div>
+                    <div class="mb-3">
+                        <label for="nombreCompleto_pac" class="form-label">Nombre Completo <span class="text-danger">*</span></label>
+                        <input type="text" id="nombreCompleto_pac" name="nombreCompleto_pac"
+                               class="form-control"
+                               value="<?= old('nombreCompleto_pac') ?>"
+                               placeholder="Ej: Juan Pérez García"
+                               required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="address" class="form-label">Dirección</label>
-                        <input type="text" id="address" name="address" class="form-control"
-                               value="<?= old('address') ?>">
+                        <label for="historialClinico_pac" class="form-label">Historial Clínico</label>
+                        <input type="text" id="historialClinico_pac" name="historialClinico_pac"
+                               class="form-control"
+                               value="<?= old('historialClinico_pac') ?>"
+                               placeholder="Ej: Hipertensión, Diabetes...">
                     </div>
 
                     <div class="mb-3">
-                        <label for="allergies" class="form-label">Alergias</label>
-                        <input type="text" id="allergies" name="allergies" class="form-control"
-                               value="<?= old('allergies') ?>" placeholder="Ninguna / Penicilina / etc.">
+                        <label for="categoriaPaciente_pac" class="form-label">Categoría del Paciente <span class="text-danger">*</span></label>
+                        <select id="categoriaPaciente_pac" name="categoriaPaciente_pac" class="form-select" required>
+                            <option value="">-- Seleccionar --</option>
+                            <option value="Nuevo"     <?= old('categoriaPaciente_pac') === 'Nuevo'     ? 'selected' : '' ?>>Nuevo</option>
+                            <option value="Frecuente" <?= old('categoriaPaciente_pac') === 'Frecuente' ? 'selected' : '' ?>>Frecuente</option>
+                            <option value="Ocasional" <?= old('categoriaPaciente_pac') === 'Ocasional' ? 'selected' : '' ?>>Ocasional</option>
+                            <option value="VIP"       <?= old('categoriaPaciente_pac') === 'VIP'       ? 'selected' : '' ?>>VIP</option>
+                        </select>
                     </div>
 
                     <div class="mb-3">
-                        <label for="notes" class="form-label">Notas clínicas</label>
-                        <textarea id="notes" name="notes" class="form-control" rows="3"
-                                  placeholder="Observaciones adicionales"><?= old('notes') ?></textarea>
+                        <label for="correoElectronico_pac" class="form-label">Correo Electrónico</label>
+                        <input type="email" id="correoElectronico_pac" name="correoElectronico_pac"
+                               class="form-control"
+                               value="<?= old('correoElectronico_pac') ?>"
+                               placeholder="correo@ejemplo.com">
                     </div>
 
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" id="is_active" name="is_active" class="form-check-input"
-                               value="1" <?= old('is_active', '1') ? 'checked' : '' ?>>
-                        <label for="is_active" class="form-check-label">Paciente activo</label>
+                    <div class="mb-3">
+                        <label for="telefono_pac" class="form-label">Teléfono</label>
+                        <input type="text" id="telefono_pac" name="telefono_pac"
+                               class="form-control"
+                               value="<?= old('telefono_pac') ?>"
+                               placeholder="Ej: 0991234567">
                     </div>
 
-                    <button type="submit" class="btn btn-success">Guardar Paciente</button>
+                    <div class="mb-3">
+                        <label for="direccion_pac" class="form-label">Dirección</label>
+                        <input type="text" id="direccion_pac" name="direccion_pac"
+                               class="form-control"
+                               value="<?= old('direccion_pac') ?>"
+                               placeholder="Ej: Calle Principal 10, Quito">
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i> Guardar Paciente
+                    </button>
                     <a href="<?= base_url('patients') ?>" class="btn btn-secondary">Cancelar</a>
                 </form>
             </div>

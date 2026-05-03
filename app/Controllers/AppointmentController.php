@@ -14,7 +14,7 @@ class AppointmentController extends BaseController
     }
 
     /**
-     * Lista todas las citas con JOIN de paciente y doctor.
+     * Lista citas con JOIN de paciente y servicio (solo lectura).
      */
     public function index()
     {
@@ -22,11 +22,11 @@ class AppointmentController extends BaseController
         return view('appointments/index', $data);
     }
 
-    // ── Stubs para no romper rutas existentes ──
+    // ── Stubs para no romper rutas existentes ────────────────
 
     public function create()
     {
-        return redirect()->to(base_url('appointments'))->with('error', 'Agendar cita aún está en construcción.');
+        return redirect()->to(base_url('appointments'))->with('error', 'Agendar cita está en construcción.');
     }
 
     public function store()

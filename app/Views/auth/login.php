@@ -45,7 +45,7 @@
                     </form>
                 </div>
                 <div class="card-footer text-muted">
-                    <small>Credenciales demo: <strong>admin</strong> / <strong>1234</strong></small>
+                    <small>Credenciales demo: <strong>admin</strong> / <strong>123</strong></small>
                 </div>
             </div>
 

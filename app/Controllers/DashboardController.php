@@ -4,20 +4,20 @@ namespace App\Controllers;
 
 use App\Models\PatientModel;
 use App\Models\AppointmentModel;
-use App\Models\DoctorModel;
+use App\Models\ServiciosModel;
+use App\Models\PersonalModel;
 
 class DashboardController extends BaseController
 {
     public function index()
     {
-        $patientModel     = new PatientModel();
-        $appointmentModel = new AppointmentModel();
-        $doctorModel      = new DoctorModel();
+        $db = \Config\Database::connect();
 
         $data = [
-            'total_patients'     => $patientModel->countAll(),
-            'total_appointments' => $appointmentModel->countAll(),
-            'total_doctors'      => $doctorModel->countAll(),
+            'total_patients'     => (new PatientModel())->countAllResults(),
+            'total_appointments' => (new AppointmentModel())->countAll(),
+            'total_servicios'    => $db->table('serviciosmedicos')->countAllResults(),
+            'total_personal'     => $db->table('personal')->countAllResults(),
         ];
 
         return view('dashboard', $data);

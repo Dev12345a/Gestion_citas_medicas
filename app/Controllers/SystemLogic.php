@@ -9,314 +9,372 @@ class SystemLogic extends Controller
     // ============================================================
     // 1. Visión 360°: Gestión Integral del Sistema de Salud Digital
     // ============================================================
-    public function definir_ObjetivosSistema() {
-        // Definición de objetivos estratégicos del sistema de salud
-        $objetivosSistema = [
-            'Digitalizar historiales clínicos completos',
-            'Optimizar tiempos de atención en un 30%',
-            'Implementar recetas electrónicas',
-            'Reducir errores médicos mediante alertas automáticas'
-        ];
+    public function definir_objetivoGeneral() {
+        // Definición del objetivo principal del sistema
+        $objetivoGeneral = "Reducir tiempo de espera en un 30% durante el próximo semestre";
         
-        // Registrar en log la definición de objetivos
-        log_message('info', 'Objetivos del sistema definidos correctamente');
-        
-        return json_encode($objetivosSistema);
-    }
-    
-    public function establecer_mision() {
-        // Misión institucional del sistema de salud digital
-        $mision = "Proveer salud digital de calidad, accesible y eficiente, 
-                   mejorando la experiencia del paciente mediante tecnología 
-                   innovadora y atención humanizada";
-        
-        // Validar que la misión tenga al menos 20 caracteres
-        if (strlen($mision) < 20) {
-            $mision = "Proveer salud digital de calidad";
+        // Validar que el objetivo tenga sentido
+        if (strlen($objetivoGeneral) < 10) {
+            $objetivoGeneral = "Reducir tiempo de espera en consultas médicas";
         }
         
-        return $mision;
+        // Guardar en sesión para seguimiento
+        session()->set('objetivo_general', $objetivoGeneral);
+        
+        return $objetivoGeneral;
     }
     
-    public function determinar_vision() {
-        // Visión a 5 años del sistema
-        $vision = "Ser líderes en telemedicina en Latinoamérica, 
-                   reconocidos por nuestra innovación tecnológica, 
-                   excelencia médica y satisfacción del paciente";
+    public function establecer_misionSistema() {
+        // Misión del sistema de gestión de citas
+        $misionSistema = "Gestionar citas médicas eficientes, reduciendo tiempos de espera 
+                          y mejorando la experiencia del paciente mediante tecnología innovadora";
         
-        return $vision;
+        // Registrar en log
+        log_message('info', 'Misión del sistema establecida: ' . substr($misionSistema, 0, 50));
+        
+        return $misionSistema;
     }
     
-    public function medir_indicadores() {
-        // Indicadores clave de rendimiento (KPIs)
-        $indicadores = [
-            'pacientes_atendidos' => 150,
-            'satisfaccion' => 95,
-            'tiempo_espera_promedio' => 15, // minutos
-            'consultas_telemedicina' => 45,
-            'tasa_ocupacion' => 85 // porcentaje
-        ];
+    public function determinar_visionSistema() {
+        // Visión a futuro del sistema
+        $visionSistema = "Ser líder en salud digital en la región, reconocido por nuestra 
+                          eficiencia operativa y satisfacción del paciente";
         
-        // Calcular métricas adicionales
-        $indicadores['tasa_crecimiento'] = ($indicadores['pacientes_atendidos'] / 120) * 100;
-        
-        return json_encode($indicadores);
+        return $visionSistema;
     }
     
-    public function establecer_metas() {
-        // Definición de metas SMART
-        $metas = [
-            'objetivo' => 'Reducir tiempo de espera en 20%',
-            'plazo' => '6 meses',
-            'responsable' => 'Dirección Médica',
-            'metricas' => 'Medición mensual'
-        ];
+    public function medir_indicadorRendimiento() {
+        // Indicador KPI de rendimiento (ejemplo: porcentaje de citas cumplidas)
+        $porcentajeCumplimiento = 92.5;
+        $metaEsperada = 95.0;
         
-        // Validar y guardar metas en sesión
-        session()->set('metas_sistema', $metas);
+        // Calcular brecha
+        $brecha = $metaEsperada - $porcentajeCumplimiento;
         
-        return true;
+        if ($brecha > 0) {
+            log_message('warning', "Faltante para meta: {$brecha}%");
+        }
+        
+        return $porcentajeCumplimiento;
+    }
+    
+    public function establecer_metaAnual() {
+        // Meta anual en términos de reducción o aumento
+        $metaAnual = 50; // 50% de reducción en quejas
+        
+        // Verificar que la meta sea alcanzable
+        if ($metaAnual > 100) {
+            $metaAnual = 100;
+        }
+        
+        // Guardar meta
+        $this->guardarLog("Meta anual establecida: {$metaAnual}%");
+        
+        return $metaAnual;
     }
 
     // ============================================================
     // 2. Productos Rentable: Gestión de Servicios Médicos
     // ============================================================
-    public function definir_tipoServicio() {
-        // Catálogo de tipos de servicio disponibles
-        $tiposServicio = [
-            'Consulta Externa',
-            'Telemedicina',
-            'Urgencias',
-            'Hospitalización',
-            'Laboratorios'
-        ];
+    public function registrar_servicio() {
+        // Registrar un nuevo servicio médico
+        $nombreServicio = "Consulta general";
+        $idServicio = 101;
+        $duracionServicio = 30; // minutos
         
-        // Seleccionar servicio por defecto
-        $tipoServicio = $tiposServicio[0];
-        
-        return $tipoServicio;
-    }
-    
-    public function definir_idServicio() {
-        // Generar ID único con prefijo y timestamp
-        $prefijo = 'SERV-';
-        $timestamp = date('YmdHis');
-        $random = rand(100, 999);
-        $idServicio = $prefijo . $timestamp . '-' . $random;
-        
-        // Almacenar en base de datos simulada
-        $this->guardarLog("Servicio creado: {$idServicio}");
-        
-        return $idServicio;
-    }
-    
-    public function verificar_disponibilidad() {
-        // Verificar disponibilidad de médicos y horarios
-        $horaActual = date('H');
-        $diaSemana = date('N'); // 1=Lunes, 7=Domingo
-        
-        // Disponibilidad: Lunes a Viernes de 8 a 20 hrs
-        $disponibilidad = ($diaSemana >= 1 && $diaSemana <= 5 && $horaActual >= 8 && $horaActual < 20);
-        
-        if (!$disponibilidad) {
-            log_message('warning', 'Intento de consulta fuera de horario');
+        // Validar que el servicio no exista
+        $serviciosExistentes = [100, 102, 103];
+        if (in_array($idServicio, $serviciosExistentes)) {
+            $idServicio = max($serviciosExistentes) + 1;
         }
         
-        return $disponibilidad;
-    }
-    
-    public function establecer_costoConsulta() {
-        // Configuración de costos según tipo de servicio
-        $costoBase = 45.00;
-        $impuestos = $costoBase * 0.12; // IVA 12%
-        $costoConsulta = $costoBase + $impuestos;
-        
-        // Redondear a 2 decimales
-        $costoConsulta = round($costoConsulta, 2);
-        
-        return $costoConsulta;
-    }
-    
-    public function calcular_rentabilidad() {
-        // Cálculo de rentabilidad (30% margen)
-        $costo = $this->establecer_costoConsulta();
-        $margen = 0.30;
-        $rentabilidad = $costo * $margen;
-        
-        // Restar costos operativos (10% del ingreso)
-        $costosOperativos = $costo * 0.10;
-        $rentabilidadNeta = $rentabilidad - $costosOperativos;
-        
-        return round($rentabilidadNeta, 2);
-    }
-    
-    public function crear_paquetes() {
-        // Paquetes de servicios médicos
-        $paquetes = [
-            ['nombre' => 'Checkup Básico', 'precio' => 120, 'duracion' => '60 min'],
-            ['nombre' => 'Cardiología Plus', 'precio' => 250, 'duracion' => '90 min'],
-            ['nombre' => 'Plan Familiar', 'precio' => 300, 'duracion' => '120 min']
+        // Guardar en array simulado
+        $nuevoServicio = [
+            'id' => $idServicio,
+            'nombre' => $nombreServicio,
+            'duracion' => $duracionServicio,
+            'estado' => 'activo'
         ];
         
-        // Guardar en base de datos simulada
-        $this->guardarLog("Paquetes creados: " . count($paquetes));
+        $this->guardarLog("Servicio registrado: " . json_encode($nuevoServicio));
         
-        return json_encode($paquetes);
+        return true;
+    }
+    
+    public function actualizar_nombreServicio() {
+        // Actualizar nombre de un servicio existente
+        $nuevoNombre = "Especialidad cardiología avanzada";
+        $servicioId = 101;
+        
+        // Validar longitud del nombre
+        if (strlen($nuevoNombre) < 5) {
+            return false;
+        }
+        
+        // Simular actualización en BD
+        $this->guardarLog("Servicio ID {$servicioId} actualizado a: {$nuevoNombre}");
+        
+        return $nuevoNombre;
+    }
+    
+    public function verificar_estadoServicio() {
+        // Verificar si un servicio está disponible
+        $estadoServicio = true; // true = Disponible, false = No disponible
+        
+        // Simular verificación de horario
+        $horaActual = date('H');
+        if ($horaActual < 8 || $horaActual > 20) {
+            $estadoServicio = false; // Fuera de horario laboral
+        }
+        
+        return $estadoServicio;
+    }
+    
+    public function establecer_precioConsulta() {
+        // Establecer precio base más impuestos
+        $precioBase = 25.50;
+        $impuesto = 0.12; // 12% IVA
+        $precioConsulta = $precioBase * (1 + $impuesto);
+        
+        // Redondear a 2 decimales
+        $precioConsulta = round($precioConsulta, 2);
+        
+        return $precioConsulta;
+    }
+    
+    public function calcular_porcentajeRentabilidad() {
+        // Calcular rentabilidad del servicio
+        $costoOperativo = 18.50;
+        $ingreso = $this->establecer_precioConsulta();
+        $ganancia = $ingreso - $costoOperativo;
+        $porcentajeRentabilidad = ($ganancia / $ingreso) * 100;
+        
+        return round($porcentajeRentabilidad, 2);
+    }
+    
+    public function gestionar_tipoPaquete() {
+        // Gestionar tipos de paquetes médicos
+        $tiposDisponibles = ['Básico', 'Premium', 'Familiar', 'Ejecutivo'];
+        $tipoPaquete = "Básico";
+        
+        // Seleccionar según disponibilidad
+        $indice = array_search($tipoPaquete, $tiposDisponibles);
+        if ($indice === false) {
+            $tipoPaquete = $tiposDisponibles[0];
+        }
+        
+        return $tipoPaquete;
     }
 
     // ============================================================
     // 3. Radar de Mercado: Análisis del Entorno de Salud
     // ============================================================
-    public function analizar_demanda() {
-        // Análisis de demanda por especialidad
-        $demanda = [
-            'especialidad' => 'pediatría',
-            'nivel' => 'Alta',
-            'porcentaje_ocupacion' => 85,
-            'tiempo_espera_promedio' => '5 días'
+    public function registrar_analisisMercado() {
+        // Registrar un nuevo análisis de mercado
+        $analisis = [
+            'fecha' => date('Y-m-d H:i:s'),
+            'analista' => 'Sistema Automatizado',
+            'alcance' => 'Nacional'
         ];
         
-        return json_encode($demanda);
+        // Guardar en BD simulada
+        $this->guardarLog("Análisis de mercado registrado: " . json_encode($analisis));
+        
+        return true;
     }
     
-    public function evaluar_competencia() {
-        // Análisis competitivo
-        $competencia = [
-            'cantidad_clinicas' => 3,
-            'ubicacion' => 'radio 5 km',
-            'cuota_mercado_estimada' => 40, // porcentaje
-            'fortalezas' => ['precios bajos', 'horario extendido']
+    public function analizar_nivelDemanda() {
+        // Analizar nivel de demanda de servicios
+        $demandaEspecialidades = [
+            'Pediatría' => 85,
+            'Cardiología' => 70,
+            'Medicina General' => 95
         ];
         
-        return json_encode($competencia);
-    }
-    
-    public function evaluar_fecha_analisis() {
-        // Fecha del análisis con formato estándar
-        $fechaAnalisis = date('Y-m-d');
-        $horaAnalisis = date('H:i:s');
-        $fechaCompleta = $fechaAnalisis . ' ' . $horaAnalisis;
+        // Determinar nivel de demanda según promedio
+        $promedioDemanda = array_sum($demandaEspecialidades) / count($demandaEspecialidades);
         
-        // Guardar registro del análisis
-        $this->guardarLog("Análisis de mercado realizado: {$fechaCompleta}");
-        
-        return $fechaCompleta;
-    }
-    
-    public function revisar_tendencias() {
-        // Tendencias del sector salud
-        $tendencias = [
-            'principal' => 'Aumento en teleconsultas',
-            'tasa_crecimiento' => '35% anual',
-            'tecnologias_emergentes' => ['IA para diagnósticos', 'Wearables médicos'],
-            'prediccion' => 'La telemedicina representará el 50% de consultas en 2025'
-        ];
-        
-        return json_encode($tendencias);
-    }
-    
-    public function verificar_normativas() {
-        // Verificación de cumplimiento normativo
-        $normativas = [
-            'HIPAA' => 'Cumple',
-            'MSP' => 'Cumple',
-            'proteccion_datos' => 'GDPR compatible',
-            'ultima_auditoria' => '2024-01-15',
-            'certificaciones' => ['ISO 27001', 'ISO 9001']
-        ];
-        
-        $cumple = ($normativas['HIPAA'] === 'Cumple' && $normativas['MSP'] === 'Cumple');
-        
-        if (!$cumple) {
-            log_message('error', 'Incumplimiento normativo detectado');
+        if ($promedioDemanda >= 80) {
+            $nivelDemanda = "Alta";
+        } elseif ($promedioDemanda >= 50) {
+            $nivelDemanda = "Media";
+        } else {
+            $nivelDemanda = "Baja";
         }
         
-        return json_encode($normativas);
+        return $nivelDemanda;
+    }
+    
+    public function evaluar_nivelCompetencia() {
+        // Evaluar nivel de competencia en el mercado
+        $numeroCompetidores = 5;
+        $cuotaMercadoPropia = 25; // porcentaje
+        
+        if ($numeroCompetidores > 10 || $cuotaMercadoPropia < 15) {
+            $nivelCompetencia = "Alta";
+        } elseif ($numeroCompetidores > 5 || $cuotaMercadoPropia < 30) {
+            $nivelCompetencia = "Media";
+        } else {
+            $nivelCompetencia = "Baja";
+        }
+        
+        return $nivelCompetencia;
+    }
+    
+    public function validar_fechaAnalisis() {
+        // Validar formato de fecha
+        $fechaAnalisis = "2026-05-01";
+        $formatoValido = preg_match('/^\d{4}-\d{2}-\d{2}$/', $fechaAnalisis);
+        
+        if (!$formatoValido) {
+            $fechaAnalisis = date('Y-m-d');
+            log_message('error', 'Fecha inválida, usando fecha actual');
+        }
+        
+        return $fechaAnalisis;
+    }
+    
+    public function identificar_tendenciaSalud() {
+        // Identificar tendencias actuales en salud
+        $tendencias = [
+            'Telemedicina', 'Inteligencia Artificial en Diagnósticos',
+            'Wearables Médicos', 'Medicina Personalizada'
+        ];
+        
+        // Seleccionar tendencia principal
+        $tendenciaSalud = $tendencias[0];
+        
+        // Registrar tendencia identificada
+        $this->guardarLog("Tendencia identificada: {$tendenciaSalud}");
+        
+        return $tendenciaSalud;
+    }
+    
+    public function verificar_normativaVigente() {
+        // Verificar normativas legales vigentes
+        $normativas = [
+            'principal' => 'Ley de Salud',
+            'secundaria' => 'Reglamento de Establecimientos de Salud',
+            'ultima_actualizacion' => '2025-12-01'
+        ];
+        
+        $normativaVigente = $normativas['principal'];
+        
+        return $normativaVigente;
     }
 
     // ============================================================
     // 4. ADN de tu cliente ideal: Gestión del Paciente
     // ============================================================
-    public function registrar_idPaciente() {
-        // Generar ID único para paciente
-        $idPaciente = rand(1000, 9999);
-        $prefijo = 'PAC-';
-        $idCompleto = $prefijo . $idPaciente . '-' . date('Y');
+    public function registrar_paciente() {
+        // Registrar nuevo paciente en el sistema
+        $idPaciente = 1;
+        $nombreCompleto = "Juan Pérez";
+        $telefono = "0991234567";
+        $direccion = "Latacunga";
         
-        // Verificar que no exista (simulación)
-        $existe = ($idPaciente === 1234); // Ejemplo
-        
-        if ($existe) {
-            $idPaciente = rand(5000, 9999);
-        }
-        
-        return $idCompleto;
-    }
-    
-    public function actualizar_nombre() {
-        // Actualizar nombre del paciente con validación
-        $nombre = "Nombre Actualizado";
-        $apellido = "Apellido Actualizado";
-        $nombreCompleto = $nombre . " " . $apellido;
-        
-        // Validar longitud mínima
-        if (strlen($nombreCompleto) < 10) {
+        // Validar datos obligatorios
+        if (empty($nombreCompleto) || empty($telefono)) {
+            log_message('error', 'Intento de registro con datos incompletos');
             return false;
         }
         
-        // Simular actualización en BD
-        $this->guardarLog("Nombre actualizado: {$nombreCompleto}");
+        // Verificar si ya existe
+        $existe = ($idPaciente === 1); // Simulación
+        
+        if (!$existe) {
+            $paciente = [
+                'id' => $idPaciente,
+                'nombre' => $nombreCompleto,
+                'telefono' => $telefono,
+                'direccion' => $direccion,
+                'fecha_registro' => date('Y-m-d')
+            ];
+            $this->guardarLog("Paciente registrado: " . json_encode($paciente));
+        }
         
         return true;
     }
     
-    public function consultar_historial() {
-        // Obtener historial médico completo
-        $historial = [
-            'diagnosticos' => ['Sin antecedentes graves', 'Alergia a penicilina'],
-            'cirugias' => ['Apendicectomía (2019)'],
-            'medicamentos' => ['Paracetamol ocasional'],
-            'fecha_ultima_consulta' => '2024-01-20'
-        ];
+    public function actualizar_datosPaciente() {
+        // Actualizar datos existentes del paciente
+        $pacienteId = 1;
+        $nuevoTelefono = "0987654321";
         
-        return json_encode($historial);
-    }
-    
-    public function clasificar_tipoPaciente() {
-        // Clasificación de paciente según frecuencia de visitas
-        $visitasUltimoAño = 5;
-        $tipoPaciente = '';
-        
-        if ($visitasUltimoAño >= 4) {
-            $tipoPaciente = "Recurrente";
-        } elseif ($visitasUltimoAño >= 2) {
-            $tipoPaciente = "Regular";
-        } else {
-            $tipoPaciente = "Ocasional";
+        // Validar formato de teléfono
+        if (!preg_match('/^09\d{8}$/', $nuevoTelefono)) {
+            log_message('error', 'Formato de teléfono inválido');
+            return false;
         }
         
-        // Agregar categoría de riesgo
-        $riesgo = "Bajo";
+        $this->guardarLog("Paciente ID {$pacienteId} actualizado");
         
-        return json_encode(['tipo' => $tipoPaciente, 'riesgo' => $riesgo]);
+        return true;
     }
     
-    public function gestionar_correo() {
-        // Gestión de correo electrónico del paciente
-        $correo = "paciente@email.com";
+    public function consultar_historialClinico() {
+        // Consultar historial clínico del paciente
+        $historialClinico = "Hipertensión diagnosticada en 2024, 
+                             alergia a penicilina, 
+                             última consulta: 15/04/2026";
         
-        // Validar formato de correo
-        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-            log_message('error', 'Correo inválido: ' . $correo);
+        // Registrar consulta
+        $this->guardarLog("Historial clínico consultado");
+        
+        return $historialClinico;
+    }
+    
+    public function clasificar_categoriaPaciente() {
+        // Clasificar según frecuencia de visitas
+        $visitasUltimoAño = 8;
+        
+        if ($visitasUltimoAño >= 6) {
+            $categoriaPaciente = "Frecuente";
+        } elseif ($visitasUltimoAño >= 3) {
+            $categoriaPaciente = "Regular";
+        } else {
+            $categoriaPaciente = "Ocasional";
+        }
+        
+        return $categoriaPaciente;
+    }
+    
+    public function gestionar_correoElectronico() {
+        // Gestionar correo electrónico del paciente
+        $correoElectronico = "juan@email.com";
+        
+        // Validar formato de email
+        if (!filter_var($correoElectronico, FILTER_VALIDATE_EMAIL)) {
+            log_message('error', "Correo inválido: {$correoElectronico}");
             return false;
         }
         
         // Verificar si ya existe en BD
-        $existe = false; // Simular consulta
-        
-        if (!$existe) {
-            $this->guardarLog("Correo registrado: {$correo}");
+        $correosExistentes = ['pedro@email.com', 'maria@email.com'];
+        if (in_array($correoElectronico, $correosExistentes)) {
+            log_message('warning', "Correo ya registrado: {$correoElectronico}");
+            return false;
         }
+        
+        $this->guardarLog("Correo gestionado: {$correoElectronico}");
+        
+        return true;
+    }
+    
+    public function registrar_contacto() {
+        // Registrar contacto de emergencia
+        $contactoEmergencia = [
+            'nombre' => 'María Pérez',
+            'telefono' => '0988887777',
+            'parentesco' => 'Cónyuge'
+        ];
+        
+        // Validar datos
+        if (empty($contactoEmergencia['nombre']) || empty($contactoEmergencia['telefono'])) {
+            return false;
+        }
+        
+        $this->guardarLog("Contacto de emergencia registrado");
         
         return true;
     }
@@ -324,388 +382,503 @@ class SystemLogic extends Controller
     // ============================================================
     // 5. Ingeniería de Ofertas: Diseño de Servicios de Atención
     // ============================================================
-    public function crear_planAtencion() {
-        // Plan de atención personalizado
-        $planAtencion = [
-            'nombre' => 'Tratamiento a 3 meses',
-            'frecuencia' => 'Semanal',
-            'duracion' => '3 meses',
-            'sesiones' => 12,
-            'costo_total' => 480,
-            'incluye' => ['Consulta médica', 'Seguimiento telefónico', 'Material educativo']
+    public function crear_tipoPlanAtencion() {
+        // Crear diferentes tipos de planes de atención
+        $planes = ['General', 'Preferencial', 'VIP', 'Empresarial'];
+        $tipoPlanAtencion = "General";
+        
+        // Configurar según el plan
+        $configuracionPlan = [
+            'General' => ['duracion' => 30, 'costo' => 25.50],
+            'Preferencial' => ['duracion' => 45, 'costo' => 40.00]
         ];
         
-        return json_encode($planAtencion);
+        if (isset($configuracionPlan[$tipoPlanAtencion])) {
+            $this->guardarLog("Plan {$tipoPlanAtencion} creado con configuración específica");
+        }
+        
+        return $tipoPlanAtencion;
     }
     
-    public function asignar_horarios() {
-        // Horarios disponibles para citas
-        $horarios = [
-            '08:00', '09:00', '10:00', '11:00', '12:00',
-            '14:00', '15:00', '16:00', '17:00', '18:00'
-        ];
+    public function asignar_horarioDisponible() {
+        // Asignar horarios disponibles para citas
+        $horarioDisponible = "08:00–12:00";
         
-        // Filtrar horarios ocupados (simulación)
-        $horariosOcupados = ['10:00', '15:00'];
-        $horariosDisponibles = array_diff($horarios, $horariosOcupados);
+        // Verificar disponibilidad real
+        $horariosOcupados = ['09:00', '10:30'];
+        $horarioInicio = explode('–', $horarioDisponible)[0];
         
-        return json_encode(array_values($horariosDisponibles));
+        if (in_array($horarioInicio, $horariosOcupados)) {
+            $horarioDisponible = "14:00–18:00"; // Horario alternativo
+        }
+        
+        return $horarioDisponible;
     }
     
-    public function crear_promociones() {
-        // Promociones activas
-        $promociones = [
-            'nombre' => '10% descuento en laboratorios',
-            'codigo' => 'LAB10',
-            'vigencia' => '2024-03-31',
-            'condiciones' => 'Válido para exámenes de rutina'
-        ];
+    public function gestionar_promocionActiva() {
+        // Gestionar promociones activas
+        $promocionActiva = "Descuento 10% en primera consulta";
         
-        // Guardar promoción en BD
-        $this->guardarLog("Promoción creada: {$promociones['nombre']}");
+        // Verificar vigencia
+        $fechaExpiracion = strtotime('2026-12-31');
+        $hoy = time();
         
-        return json_encode($promociones);
+        if ($hoy > $fechaExpiracion) {
+            $promocionActiva = "Sin promociones activas";
+        }
+        
+        return $promocionActiva;
     }
     
-    public function diseñar_personalizacion() {
-        // Configuración de personalización para el paciente
-        $personalizacion = [
-            'seguimiento' => 'Seguimiento semanal por WhatsApp',
-            'recordatorios' => '24 horas antes de cita',
-            'preferencias' => ['médico de cabecera', 'horario matutino'],
+    public function definir_nivelPersonalizacion() {
+        // Definir nivel de personalización del servicio
+        $preferenciasPaciente = [
+            'horario_preferido' => 'mañana',
+            'medico_preferido' => 'Dr. Gómez',
             'notificaciones' => true
         ];
         
-        return json_encode($personalizacion);
+        if (count($preferenciasPaciente) >= 3) {
+            $nivelPersonalizacion = "Prioridad alta";
+        } elseif (count($preferenciasPaciente) >= 1) {
+            $nivelPersonalizacion = "Prioridad media";
+        } else {
+            $nivelPersonalizacion = "Prioridad baja";
+        }
+        
+        return $nivelPersonalizacion;
     }
 
     // ============================================================
     // 6. Marketing de conversión: Gestión de Comunicación y Atención
     // ============================================================
     public function agendar_cita() {
-        // Agendar nueva cita
+        // Agendar nueva cita médica
+        $idCita = "CIT-" . date('Ymd') . "-001";
+        $fechaCita = "2026-05-10";
+        $horaCita = "10:00";
+        
+        // Verificar disponibilidad
         $cita = [
-            'estado' => 'Confirmada',
-            'mensaje' => 'Agendada con éxito',
-            'fecha' => date('Y-m-d', strtotime('+2 days')),
-            'hora' => '11:00',
-            'codigo_confirmacion' => uniqid('CITA-')
+            'id' => $idCita,
+            'fecha' => $fechaCita,
+            'hora' => $horaCita,
+            'estado' => 'Agendada',
+            'fecha_agendamiento' => date('Y-m-d H:i:s')
         ];
         
-        // Enviar confirmación (simulado)
-        $this->enviarNotificacion($cita['codigo_confirmacion']);
-        
-        return json_encode($cita);
-    }
-    
-    public function cancelar_cita() {
-        // Cancelar cita existente
-        $motivo = "Solicitud del paciente";
-        $estado = "Cancelada";
-        
-        // Registrar cancelación
-        $this->guardarLog("Cita cancelada. Motivo: {$motivo}");
-        
-        // Liberar horario (simulación)
-        $horarioLiberado = true;
-        
-        return $estado;
-    }
-    
-    public function programar_cita() {
-        // Programar cita futura
-        $fechaBase = date('Y-m-d');
-        $diasAgregar = 1;
-        $fecha = date('Y-m-d', strtotime("+{$diasAgregar} day"));
-        
-        // Validar que no sea fin de semana
-        $diaSemana = date('N', strtotime($fecha));
-        if ($diaSemana >= 6) {
-            $fecha = date('Y-m-d', strtotime("next Monday"));
-        }
-        
-        return $fecha;
-    }
-    
-    public function enviar_recordatorio() {
-        // Enviar recordatorio por múltiples canales
-        $recordatorio = [
-            'mensaje' => 'Su cita médica es mañana a las 10:00',
-            'canales' => ['WhatsApp', 'Email', 'SMS'],
-            'estado_envio' => 'Enviado',
-            'fecha_envio' => date('Y-m-d H:i:s')
-        ];
-        
-        // Log de envío
-        $this->guardarLog("Recordatorio enviado por: " . implode(', ', $recordatorio['canales']));
+        $this->guardarLog("Cita agendada: " . json_encode($cita));
         
         return true;
     }
     
-    public function evaluar_satisfaccion() {
-        // Evaluación de satisfacción del paciente
-        $puntuacion = 5; // Escala 1 a 5
-        $comentario = "Excelente atención, muy profesionales";
+    public function cancelar_cita() {
+        // Cancelar cita existente
+        $idCita = "CIT-20260510-001";
+        $motivo = "Solicitud del paciente";
         
-        // Clasificar nivel
-        if ($puntuacion >= 4) {
-            $nivel = "Alta satisfacción";
-        } elseif ($puntuacion >= 3) {
-            $nivel = "Satisfacción media";
-        } else {
-            $nivel = "Insatisfecho";
-        }
+        $estadoCita = "Cancelada";
         
-        // Almacenar evaluación
-        $evaluacion = [
-            'puntuacion' => $puntuacion,
-            'nivel' => $nivel,
-            'comentario' => $comentario,
-            'fecha' => date('Y-m-d')
-        ];
+        // Registrar cancelación
+        $this->guardarLog("Cita {$idCita} cancelada. Motivo: {$motivo}");
         
-        return json_encode($evaluacion);
+        // Liberar horario (simulación)
+        $horarioLiberado = true;
+        
+        return true;
     }
-
-    // ============================================================
-    // 7. Automatización e Infraestructura digital: Gestión del Sistema
-    // ============================================================
-    public function registrar_usuario() {
-        // Registrar nuevo usuario en el sistema
-        $usuario = "nuevo_admin";
-        $email = "admin@sistema.com";
-        $passwordHash = password_hash("temporal123", PASSWORD_DEFAULT);
+    
+    public function reprogramar_cita() {
+        // Reprogramar cita a nueva fecha
+        $idCita = "CIT-20260510-001";
+        $nuevaFecha = "2026-05-15";
+        $nuevaHora = "11:30";
         
-        // Verificar si usuario ya existe
-        $existe = ($usuario === "nuevo_admin"); // Simulación
+        // Verificar nueva disponibilidad
+        $disponible = true; // Simulación
         
-        if (!$existe) {
-            $this->guardarLog("Usuario registrado: {$usuario}");
+        if ($disponible) {
+            $this->guardarLog("Cita {$idCita} reprogramada para {$nuevaFecha} {$nuevaHora}");
             return true;
         }
         
         return false;
     }
     
-    public function gestionar_usuario() {
-        // Gestión de estado de usuario
-        $usuarioId = 1;
-        $estado = "Usuario activo";
+    public function actualizar_estadoCita() {
+        // Actualizar estado de la cita
+        $idCita = "CIT-20260510-001";
+        $estadoCita = "Atendida";
         
-        // Verificar últimos accesos
-        $ultimoAcceso = date('Y-m-d H:i:s', strtotime('-1 day'));
-        $diasInactividad = 1;
+        $estadosValidos = ['Agendada', 'Confirmada', 'Atendida', 'Cancelada', 'No Asistió'];
         
-        if ($diasInactividad > 30) {
-            $estado = "Usuario inactivo";
-            $this->guardarLog("Usuario desactivado por inactividad: {$usuarioId}");
+        if (!in_array($estadoCita, $estadosValidos)) {
+            $estadoCita = 'Agendada'; // Estado por defecto
         }
         
-        return $estado;
+        $this->guardarLog("Cita {$idCita} actualizada a estado: {$estadoCita}");
+        
+        return $estadoCita;
     }
     
-    public function definir_roles() {
-        // Definición de roles y permisos
-        $roles = [
-            'Admin' => ['todos', 'usuarios', 'reportes', 'configuracion'],
-            'Medico' => ['citas', 'historial_clinico', 'recetas', 'mis_pacientes'],
-            'Recepcion' => ['citas', 'registro_pacientes', 'facturacion']
-        ];
+    public function enviar_recordatorio() {
+        // Enviar recordatorio de cita al paciente
+        $tipoRecordatorio = "SMS";
+        $numeroTelefono = "0991234567";
+        $mensaje = "Recordatorio: Su cita médica es mañana a las 10:00";
         
-        // Guardar configuración de roles
-        session()->set('roles_sistema', $roles);
+        // Simular envío según tipo
+        $canalesDisponibles = ['SMS', 'WhatsApp', 'Email'];
         
-        return json_encode($roles);
-    }
-    
-    public function gestionar_baseDatos() {
-        // Verificar conexión y estado de base de datos
-        $conexion = [
-            'estado' => 'Conexión estable',
-            'host' => 'localhost',
-            'database' => 'salud_digital',
-            'tiempo_respuesta' => '25ms',
-            'tablas_activas' => 12
-        ];
-        
-        // Simular verificación de conexión
-        try {
-            // Aquí iría la conexión real
-            $conexionExitosa = true;
-        } catch (\Exception $e) {
-            $conexionExitosa = false;
-            log_message('error', 'Error de conexión: ' . $e->getMessage());
+        if (!in_array($tipoRecordatorio, $canalesDisponibles)) {
+            $tipoRecordatorio = 'SMS'; // Por defecto
         }
         
-        return json_encode($conexion);
-    }
-    
-    public function validar_seguridad() {
-        // Validaciones de seguridad del sistema
-        $seguridad = [
-            'tokens_validados' => true,
-            'sesion_activa' => true,
-            'ip_autorizada' => true,
-            'csrf_protegido' => true,
-            'tiempo_sesion' => date('Y-m-d H:i:s'),
-            'nivel_seguridad' => 'Alto'
-        ];
-        
-        // Verificar integridad
-        if (!$seguridad['tokens_validados'] || !$seguridad['csrf_protegido']) {
-            log_message('critical', 'Fallo de seguridad detectado');
-            return false;
-        }
+        $this->guardarLog("Recordatorio enviado por {$tipoRecordatorio} a {$numeroTelefono}");
         
         return true;
     }
     
-    public function generar_integracion() {
-        // Configuración de APIs e integraciones
-        $integracion = [
-            'api_gateway' => 'Conectada',
-            'servicios' => [
-                'facturacion_electronica' => true,
-                'firma_digital' => true,
-                'notificaciones_sms' => false,
-                'pasarela_pagos' => true
-            ],
-            'endpoints' => [
-                'https://api.salud.com/v1/pacientes',
-                'https://api.salud.com/v1/citas'
-            ],
-            'version_api' => 'v1.2'
-        ];
+    public function registrar_nivelSatisfaccion() {
+        // Registrar nivel de satisfacción post-consulta
+        $nivelSatisfaccion = 4.5; // Escala 1-5
         
-        return json_encode($integracion);
+        // Validar rango
+        if ($nivelSatisfaccion < 1) {
+            $nivelSatisfaccion = 1;
+        } elseif ($nivelSatisfaccion > 5) {
+            $nivelSatisfaccion = 5;
+        }
+        
+        // Clasificar satisfacción
+        if ($nivelSatisfaccion >= 4.5) {
+            $categoria = "Excelente";
+        } elseif ($nivelSatisfaccion >= 3.5) {
+            $categoria = "Buena";
+        } elseif ($nivelSatisfaccion >= 2.5) {
+            $categoria = "Regular";
+        } else {
+            $categoria = "Mala";
+        }
+        
+        $this->guardarLog("Satisfacción registrada: {$nivelSatisfaccion} ({$categoria})");
+        
+        return $nivelSatisfaccion;
+    }
+    
+    public function asignar_paciente() {
+        // Asignar paciente a una cita o servicio
+        $idPaciente = 1;
+        $idCita = "CIT-20260510-001";
+        
+        // Verificar que el paciente exista
+        if ($idPaciente <= 0) {
+            log_message('error', 'ID de paciente inválido');
+            return false;
+        }
+        
+        $this->guardarLog("Paciente {$idPaciente} asignado a cita {$idCita}");
+        
+        return true;
+    }
+    
+    public function asignar_servicio() {
+        // Asignar servicio a una cita
+        $idServicio = 101;
+        $idCita = "CIT-20260510-001";
+        
+        // Verificar que el servicio esté activo
+        if ($idServicio <= 0) {
+            log_message('error', 'ID de servicio inválido');
+            return false;
+        }
+        
+        $this->guardarLog("Servicio {$idServicio} asignado a cita {$idCita}");
+        
+        return true;
     }
 
     // ============================================================
-    // 8. Power-Team & Delegación Estratégica: Personal Médico
+    // 7. Automatización e Infraestructura digital
     // ============================================================
-    public function registrar_idMedico() {
-        // Generar ID único para médico
-        $idMedico = rand(100, 999);
-        $prefijo = 'MED-';
-        $anio = date('Y');
-        $idCompleto = $prefijo . $idMedico . '-' . $anio;
+    public function registrar_usuario() {
+        // Registrar usuario en el sistema
+        $nombreUsuario = "admin";
+        $estadoUsuario = "Activo";
         
-        // Verificar unicidad
-        $existe = false; // Simulación de verificación
-        
-        if (!$existe) {
-            $this->guardarLog("Médico registrado: {$idCompleto}");
+        // Validar nombre de usuario
+        if (strlen($nombreUsuario) < 4) {
+            log_message('error', 'Nombre de usuario muy corto');
+            return false;
         }
         
-        return $idCompleto;
-    }
-    
-    public function registrar_idPersonal() {
-        // Registro de personal administrativo
-        $idPersonal = rand(1000, 5000);
-        $prefijo = 'ADM-';
-        $departamento = 'Atención al Paciente';
-        $idCompleto = $prefijo . $idPersonal . '-' . substr($departamento, 0, 3);
+        // Verificar si ya existe
+        $usuariosExistentes = ['admin', 'medico1', 'recepcion'];
+        if (in_array($nombreUsuario, $usuariosExistentes)) {
+            log_message('warning', "Usuario {$nombreUsuario} ya existe");
+            return false;
+        }
         
-        return $idCompleto;
+        $this->guardarLog("Usuario registrado: {$nombreUsuario} - Estado: {$estadoUsuario}");
+        
+        return true;
     }
     
-    public function asignar_especialidad() {
-        // Asignación de especialidades médicas
-        $especialidades = [
+    public function autenticar_usuario() {
+        // Autenticar credenciales de usuario
+        $username = "admin";
+        $password = "password123";
+        
+        // Simular verificación (en producción usar hash)
+        $usuarioValido = ($username === "admin");
+        $passwordValida = ($password === "password123");
+        
+        if ($usuarioValido && $passwordValida) {
+            // Crear sesión
+            session()->set('usuario_autenticado', true);
+            session()->set('username', $username);
+            $this->guardarLog("Usuario {$username} autenticado exitosamente");
+            return true;
+        }
+        
+        log_message('error', "Intento de autenticación fallido para usuario: {$username}");
+        return false;
+    }
+    
+    public function asignar_rolUsuario() {
+        // Asignar rol a usuario
+        $rolUsuario = "administrador";
+        
+        $rolesValidos = ['administrador', 'médico', 'recepcionista', 'paciente'];
+        
+        if (!in_array($rolUsuario, $rolesValidos)) {
+            $rolUsuario = 'paciente'; // Rol por defecto
+            log_message('warning', "Rol inválido, asignando rol por defecto");
+        }
+        
+        // Guardar rol en sesión
+        session()->set('rol_usuario', $rolUsuario);
+        $this->guardarLog("Rol asignado: {$rolUsuario}");
+        
+        return true;
+    }
+    
+    public function administrar_baseDatos() {
+        // Administrar conexión y operaciones de BD
+        $motorBaseDatos = "MySQL";
+        
+        // Simular verificación de conexión
+        $configuracion = [
+            'host' => 'localhost',
+            'puerto' => 3306,
+            'database' => 'sistema_salud',
+            'motor' => $motorBaseDatos
+        ];
+        
+        // Verificar conexión (simulación)
+        $conectado = true;
+        
+        if (!$conectado) {
+            log_message('critical', "Error de conexión a {$motorBaseDatos}");
+            return false;
+        }
+        
+        $this->guardarLog("Base de datos administrada: {$motorBaseDatos}");
+        
+        return true;
+    }
+    
+    public function validar_nivelSeguridad() {
+        // Validar nivel de seguridad del sistema
+        $nivelSeguridad = "Alta";
+        
+        // Verificar múltiples aspectos
+        $checks = [
+            'sesion_activa' => true,
+            'token_valido' => true,
+            'ip_autorizada' => true,
+            'https_activo' => true
+        ];
+        
+        $cumple = !in_array(false, $checks);
+        
+        if (!$cumple) {
+            $nivelSeguridad = "Baja";
+            log_message('critical', 'Fallo en validación de seguridad');
+        }
+        
+        return $nivelSeguridad;
+    }
+    
+    public function gestionar_tipoIntegracion() {
+        // Gestionar integraciones con sistemas externos
+        $tipoIntegracion = "API externa";
+        
+        $integraciones = [
+            'API externa' => 'https://api.salud.gob.ec/v1',
+            'Webhook' => 'https://webhooks.sistema.com',
+            'Base de datos compartida' => '192.168.1.100:5432'
+        ];
+        
+        if (!isset($integraciones[$tipoIntegracion])) {
+            $tipoIntegracion = 'API externa'; // Por defecto
+        }
+        
+        $this->guardarLog("Integración gestionada: {$tipoIntegracion}");
+        
+        return true;
+    }
+
+    // ============================================================
+    // 8. Power-Team & Delegación Estratégica
+    // ============================================================
+    public function registrar_medico() {
+        // Registrar médico en el sistema
+        $idMedico = 10;
+        $nombreMedico = "Dr. Juan Carlos Gómez";
+        $especialidad = "Cardiología";
+        
+        // Validar ID único
+        $medicosExistentes = [5, 8, 12];
+        if (in_array($idMedico, $medicosExistentes)) {
+            $idMedico = max($medicosExistentes) + 1;
+        }
+        
+        $medico = [
+            'id' => $idMedico,
+            'nombre' => $nombreMedico,
+            'especialidad' => $especialidad,
+            'registro_medico' => 'RM-' . date('Y') . '-' . $idMedico
+        ];
+        
+        $this->guardarLog("Médico registrado: " . json_encode($medico));
+        
+        return true;
+    }
+    
+    public function registrar_personal() {
+        // Registrar personal administrativo
+        $idPersonal = 20;
+        $nombrePersonal = "";
+        $cargo = "";
+        
+        // Validar datos
+        if (empty($nombrePersonal) || empty($cargo)) {
+            return false;
+        }
+        
+        $personal = [
+            'id' => $idPersonal,
+            'nombre' => $nombrePersonal,
+            'cargo' => $cargo,
+            'departamento' => 'Atención al Paciente'
+        ];
+        
+        $this->guardarLog("Personal registrado: " . json_encode($personal));
+        
+        return true;
+    }
+    
+    public function asignar_especialidadMedica() {
+        // Asignar especialidad a médico
+        $especialidadMedica = "Cardiología";
+        
+        $especialidadesValidas = [
             'Cardiología', 'Pediatría', 'Ginecología', 
             'Traumatología', 'Dermatología', 'Medicina General'
         ];
         
-        // Seleccionar especialidad según disponibilidad
-        $especialidad = $especialidades[0];
-        
-        // Validar que el médico tenga certificación
-        $certificado = true;
-        
-        if (!$certificado) {
-            $especialidad = "Medicina General";
+        if (!in_array($especialidadMedica, $especialidadesValidas)) {
+            $especialidadMedica = 'Medicina General'; // Por defecto
+            log_message('warning', "Especialidad no válida, asignando Medicina General");
         }
         
-        return $especialidad;
+        $this->guardarLog("Especialidad asignada: {$especialidadMedica}");
+        
+        return true;
     }
     
-    public function asignar_horarioTrabajo() {
-        // Configuración de horario laboral
-        $horarioTrabajo = [
-            'dias' => 'Lunes a Viernes',
-            'horario' => '09:00 - 17:00',
-            'descanso' => '13:00 - 14:00',
-            'total_horas' => 7,
-            'turno' => 'Matutino'
-        ];
+    public function asignar_horarioLaboral() {
+        // Asignar horario laboral al personal
+        $horarioLaboral = "08:00–16:00";
         
-        // Calcular horas semanales
-        $horasDiarias = 7;
-        $diasSemana = 5;
-        $horasSemanales = $horasDiarias * $diasSemana;
-        $horarioTrabajo['horas_semanales'] = $horasSemanales;
+        // Validar formato
+        if (!preg_match('/^\d{2}:\d{2}–\d{2}:\d{2}$/', $horarioLaboral)) {
+            $horarioLaboral = "09:00–17:00"; // Horario estándar
+            log_message('warning', "Formato de horario inválido, usando estándar");
+        }
         
-        return json_encode($horarioTrabajo);
+        // Calcular horas trabajadas
+        $partes = explode('–', $horarioLaboral);
+        $inicio = strtotime($partes[0]);
+        $fin = strtotime($partes[1]);
+        $horas = ($fin - $inicio) / 3600;
+        
+        $this->guardarLog("Horario asignado: {$horarioLaboral} ({$horas} horas)");
+        
+        return $horarioLaboral;
     }
     
-    public function evaluar_desempeño() {
-        // Evaluación de desempeño del personal
-        $desempeño = [
-            'calificacion' => 'Excelente',
-            'puntaje' => 95,
-            'metricas' => [
-                'puntualidad' => 100,
-                'satisfaccion_pacientes' => 92,
-                'productividad' => 88,
-                'trabajo_equipo' => 95
-            ],
-            'comentarios' => 'Excelente atención al paciente y trabajo en equipo'
-        ];
+    public function evaluar_nivelDesempeno() {
+        // Evaluar desempeño del personal
+        $nivelDesempeno = 95.5; // Porcentaje
         
-        // Determinar bono según desempeño
-        if ($desempeño['puntaje'] >= 90) {
-            $desempeño['bono'] = '$500 USD';
-        } elseif ($desempeño['puntaje'] >= 75) {
-            $desempeño['bono'] = '$250 USD';
+        // Validar rango
+        if ($nivelDesempeno < 0) {
+            $nivelDesempeno = 0;
+        } elseif ($nivelDesempeno > 100) {
+            $nivelDesempeno = 100;
+        }
+        
+        // Determinar categoría
+        if ($nivelDesempeno >= 90) {
+            $categoria = "Excelente";
+            $bono = 500;
+        } elseif ($nivelDesempeno >= 75) {
+            $categoria = "Bueno";
+            $bono = 250;
+        } elseif ($nivelDesempeno >= 60) {
+            $categoria = "Regular";
+            $bono = 100;
         } else {
-            $desempeño['bono'] = '$0 USD';
+            $categoria = "Necesita mejorar";
+            $bono = 0;
         }
         
-        return json_encode($desempeño);
+        $this->guardarLog("Desempeño evaluado: {$nivelDesempeno}% - {$categoria} - Bono: \${$bono}");
+        
+        return $nivelDesempeno;
     }
     
-    public function asignar_rolPersonal() {
-        // Asignación de roles estratégicos
-        $rolesDisponibles = [
-            'Especialista', 'Jefe de Servicio', 'Coordinador', 
-            'Asistente', 'Residente', 'Administrativo'
+    public function asignar_tipoRol() {
+        // Asignar tipo de rol al personal
+        $tipoRol = "Médico";
+        
+        $rolesPosibles = ['Médico', 'Enfermero', 'Administrativo', 'Directivo', 'Técnico'];
+        
+        if (!in_array($tipoRol, $rolesPosibles)) {
+            $tipoRol = 'Administrativo'; // Rol por defecto
+            log_message('warning', "Rol no reconocido, asignando Administrativo");
+        }
+        
+        // Asignar permisos según rol
+        $permisos = [
+            'Médico' => ['citas', 'historial', 'recetas'],
+            'Administrativo' => ['citas', 'facturacion', 'reportes']
         ];
         
-        $rolPersonal = $rolesDisponibles[0];
+        $permisosAsignados = $permisos[$tipoRol] ?? ['consultas_basicas'];
         
-        // Asignar responsabilidades según rol
-        $responsabilidades = [
-            'Especialista' => ['Consultas', 'Cirugías', 'Supervisión de residentes'],
-            'Coordinador' => ['Gestión de horarios', 'Reportes', 'Atención de quejas']
-        ];
+        $this->guardarLog("Rol asignado: {$tipoRol} - Permisos: " . implode(', ', $permisosAsignados));
         
-        // Guardar asignación
-        $this->guardarLog("Rol asignado: {$rolPersonal}");
-        
-        return json_encode(['rol' => $rolPersonal, 'responsabilidades' => $responsabilidades[$rolPersonal] ?? []]);
+        return true;
     }
-    
+
     // ============================================================
     // Métodos auxiliares privados
     // ============================================================
     private function guardarLog($mensaje) {
-        // Simular guardado de log
+        // Guardar registro de actividades del sistema
         log_message('info', '[SystemLogic] ' . $mensaje);
-    }
-    
-    private function enviarNotificacion($codigo) {
-        // Simular envío de notificación
-        log_message('info', "Notificación enviada. Código: {$codigo}");
     }
 }

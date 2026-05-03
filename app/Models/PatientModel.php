@@ -6,43 +6,17 @@ use CodeIgniter\Model;
 
 class PatientModel extends Model
 {
-    protected $table      = 'patients';
-    protected $primaryKey = 'id';
+    protected $table      = 'paciente';
+    protected $primaryKey = 'idPaciente_pac';
 
     protected $allowedFields = [
-        'code',
-        'first_name',
-        'last_name',
-        'date_of_birth',
-        'gender',
-        'email',
-        'phone',
-        'address',
-        'blood_type',
-        'allergies',
-        'notes',
-        'is_active',
+        'nombreCompleto_pac',
+        'historialClinico_pac',
+        'categoriaPaciente_pac',
+        'correoElectronico_pac',
+        'telefono_pac',
+        'direccion_pac',
     ];
 
     protected $useTimestamps = false;
-
-    /**
-     * Valida que el código no esté en uso por otro paciente.
-     */
-    public function validateCode(string $code, ?int $id = null): bool
-    {
-        if ($id !== null) {
-            $current = $this->find($id);
-            if ($current && $current['code'] === $code) {
-                return true;
-            }
-        }
-
-        $builder = $this->where('code', $code);
-        if ($id !== null) {
-            $builder->where('id !=', $id);
-        }
-
-        return $builder->first() === null;
-    }
 }
