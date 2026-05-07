@@ -44,7 +44,8 @@
                             <label for="nivelDesempeno_per" class="form-label">Nivel Desempeño (%)</label>
                             <input type="number" id="nivelDesempeno_per" name="nivelDesempeno_per" class="form-control"
                                    min="0" max="100" step="0.1" required
-                                   value="<?= old('nivelDesempeno_per', $item['nivelDesempeno_per']) ?>">
+                                   value="<?= old('nivelDesempeno_per', $item['nivelDesempeno_per']) ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                     </div>
                     <div class="d-flex gap-2 mt-4">

@@ -39,18 +39,21 @@
                         <div class="col-md-4">
                             <label for="precioConsulta_ser" class="form-label">Precio ($)</label>
                             <input type="number" id="precioConsulta_ser" name="precioConsulta_ser" class="form-control"
-                                   step="0.01" min="0" required value="<?= old('precioConsulta_ser', $item['precioConsulta_ser']) ?>">
+                                   step="0.01" min="0" required value="<?= old('precioConsulta_ser', $item['precioConsulta_ser']) ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                         <div class="col-md-4">
                             <label for="porcentajeRentabilidad_ser" class="form-label">Rentabilidad (%)</label>
                             <input type="number" id="porcentajeRentabilidad_ser" name="porcentajeRentabilidad_ser"
                                    class="form-control" step="0.01" min="0" max="100" required
-                                   value="<?= old('porcentajeRentabilidad_ser', $item['porcentajeRentabilidad_ser']) ?>">
+                                   value="<?= old('porcentajeRentabilidad_ser', $item['porcentajeRentabilidad_ser']) ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                         <div class="col-md-4">
                             <label for="duracionServicio_ser" class="form-label">Duración (min)</label>
                             <input type="number" id="duracionServicio_ser" name="duracionServicio_ser" class="form-control"
-                                   min="1" required value="<?= old('duracionServicio_ser', $item['duracionServicio_ser']) ?>">
+                                   min="1" required value="<?= old('duracionServicio_ser', $item['duracionServicio_ser']) ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                     </div>
                     <div class="d-flex gap-2 mt-4">

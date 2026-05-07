@@ -12,6 +12,7 @@ class AppointmentModel extends Model
     protected $allowedFields = [
         'idCita_cit',
         'fechaCita_cit',
+        'horaCita_cit',
         'estadoCita_cit',
         'tipoRecordatorio_cit',
         'nivelSatisfaccion_cit',

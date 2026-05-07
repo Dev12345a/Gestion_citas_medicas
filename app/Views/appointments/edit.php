@@ -39,6 +39,11 @@
                                    value="<?= old('fechaCita_cit', $appointment['fechaCita_cit']) ?>">
                         </div>
                         <div class="col-md-6">
+                            <label for="horaCita_cit" class="form-label">Hora de Cita <span class="text-danger">*</span></label>
+                            <input type="time" id="horaCita_cit" name="horaCita_cit" class="form-control" required
+                                   value="<?= old('horaCita_cit', $appointment['horaCita_cit']) ?>">
+                        </div>
+                        <div class="col-md-6">
                             <label for="idPaciente_cit" class="form-label">Paciente <span class="text-danger">*</span></label>
                             <select id="idPaciente_cit" name="idPaciente_cit" class="form-select" required>
                                 <?php foreach ($patients as $p): ?>

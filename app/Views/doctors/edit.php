@@ -50,7 +50,9 @@
 
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?= esc($doctor['email'] ?? '') ?>">
+                            <input type="email" class="form-control" id="email" name="email" value="<?= esc($doctor['email'] ?? '') ?>"
+                                   oninvalid="this.setCustomValidity('Por favor, ingrese un correo electrónico válido.')"
+                                   oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label fw-semibold">Teléfono</label>

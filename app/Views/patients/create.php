@@ -49,14 +49,18 @@
                             <input type="email" id="correoElectronico_pac" name="correoElectronico_pac"
                                    class="form-control"
                                    value="<?= old('correoElectronico_pac') ?>"
-                                   placeholder="correo@ejemplo.com">
+                                   placeholder="correo@ejemplo.com"
+                                   oninvalid="this.setCustomValidity('Por favor, ingrese un correo electrónico válido.')"
+                                   oninput="this.setCustomValidity('')">
                         </div>
+                        
                         <div class="col-md-6">
                             <label for="telefono_pac" class="form-label">Teléfono</label>
-                            <input type="text" id="telefono_pac" name="telefono_pac"
+                            <input type="tel" id="telefono_pac" name="telefono_pac"
                                    class="form-control"
                                    value="<?= old('telefono_pac') ?>"
-                                   placeholder="Ej: 0991234567">
+                                   placeholder="Ej: 0991234567"
+                                   oninput="this.value = this.value.replace(/[^0-9+ ]/g, '')">
                         </div>
                         <div class="col-12">
                             <label for="direccion_pac" class="form-label">Dirección</label>

@@ -41,6 +41,11 @@
                                    value="<?= old('fechaCita_cit') ?>">
                         </div>
                         <div class="col-md-6">
+                            <label for="horaCita_cit" class="form-label">Hora de Cita <span class="text-danger">*</span></label>
+                            <input type="time" id="horaCita_cit" name="horaCita_cit" class="form-control" required
+                                   value="<?= old('horaCita_cit') ?>">
+                        </div>
+                        <div class="col-md-6">
                             <label for="idPaciente_cit" class="form-label">Paciente <span class="text-danger">*</span></label>
                             <select id="idPaciente_cit" name="idPaciente_cit" class="form-select" required>
                                 <option value="">-- Seleccionar Paciente --</option>
@@ -86,7 +91,8 @@
                             <label for="nivelSatisfaccion_cit" class="form-label">Nivel de Satisfacción <span class="text-danger">*</span></label>
                             <input type="number" id="nivelSatisfaccion_cit" name="nivelSatisfaccion_cit"
                                    class="form-control" min="1" max="5" step="0.1" required
-                                   placeholder="1.0 - 5.0" value="<?= old('nivelSatisfaccion_cit', '5.0') ?>">
+                                   placeholder="1.0 - 5.0" value="<?= old('nivelSatisfaccion_cit', '5.0') ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
 

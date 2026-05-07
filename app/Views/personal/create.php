@@ -30,7 +30,6 @@
                         </div>
 
                         <!-- Credenciales de acceso (opcionales) -->
-                        <div class="col-12"><hr><small class="text-muted"><i class="fas fa-key me-1"></i>Credenciales de acceso al sistema (opcional — dejar vacío si no requiere login)</small></div>
                         <div class="col-md-6">
                             <label for="username_per" class="form-label">Usuario de acceso</label>
                             <input type="text" id="username_per" name="username_per" class="form-control"
@@ -58,7 +57,8 @@
                         <div class="col-md-6">
                             <label for="nivelDesempeno_per" class="form-label">Nivel de Desempeño (%) <span class="text-danger">*</span></label>
                             <input type="number" id="nivelDesempeno_per" name="nivelDesempeno_per" class="form-control"
-                                   min="0" max="100" step="0.1" required placeholder="95.0" value="<?= old('nivelDesempeno_per') ?>">
+                                   min="0" max="100" step="0.1" required placeholder="95.0" value="<?= old('nivelDesempeno_per') ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                     </div>
                     <div class="d-flex gap-2 mt-4">

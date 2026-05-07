@@ -48,13 +48,16 @@
                             <label for="correoElectronico_pac" class="form-label">Correo Electrónico</label>
                             <input type="email" id="correoElectronico_pac" name="correoElectronico_pac"
                                    class="form-control"
-                                   value="<?= esc(old('correoElectronico_pac', $patient['correoElectronico_pac'])) ?>">
+                                   value="<?= esc(old('correoElectronico_pac', $patient['correoElectronico_pac'])) ?>"
+                                   oninvalid="this.setCustomValidity('Por favor, ingrese un correo electrónico válido.')"
+                                   oninput="this.setCustomValidity('')">
                         </div>
                         <div class="col-md-6">
                             <label for="telefono_pac" class="form-label">Teléfono</label>
-                            <input type="text" id="telefono_pac" name="telefono_pac"
+                            <input type="tel" id="telefono_pac" name="telefono_pac"
                                    class="form-control"
-                                   value="<?= esc(old('telefono_pac', $patient['telefono_pac'])) ?>">
+                                   value="<?= esc(old('telefono_pac', $patient['telefono_pac'])) ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9+ ]/g, '')">
                         </div>
                         <div class="col-12">
                             <label for="direccion_pac" class="form-label">Dirección</label>
