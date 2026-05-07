@@ -16,17 +16,8 @@ class PatientController extends BaseController
     // ── INDEX: Doctor ve SOLO sus pacientes (vía citas) ────────
     public function index()
     {
-        $doctorId = session()->get('user_id');
-        $db = \Config\Database::connect();
-
-        // Los pacientes de este doctor son los que tienen citas con él
-        $patients = $db->query("
-            SELECT DISTINCT p.*
-            FROM paciente p
-            INNER JOIN citas c ON c.idPaciente_cit = p.idPaciente_pac
-            WHERE c.idMedico_cit = ?
-            ORDER BY p.nombreCompleto_pac ASC
-        ", [$doctorId])->getResultArray();
+        // Mostrar todos los pacientes del sistema
+        $patients = $this->patientModel->orderBy('nombreCompleto_pac', 'ASC')->findAll();
 
         return view('patients/index', ['patients' => $patients]);
     }
@@ -39,6 +30,8 @@ class PatientController extends BaseController
     public function store()
     {
         $rules = [
+            'username_pac'          => 'required|min_length[4]|max_length[100]|is_unique[paciente.username_pac]',
+            'password_pac'          => 'required|min_length[6]',
             'nombreCompleto_pac'    => 'required|min_length[3]|max_length[150]',
             'categoriaPaciente_pac' => 'required',
             'correoElectronico_pac' => 'permit_empty|valid_email|max_length[150]',
@@ -51,6 +44,8 @@ class PatientController extends BaseController
         }
 
         $this->patientModel->insert([
+            'username_pac'          => $this->request->getPost('username_pac'),
+            'password_pac'          => $this->request->getPost('password_pac'),
             'nombreCompleto_pac'    => $this->request->getPost('nombreCompleto_pac'),
             'historialClinico_pac'  => $this->request->getPost('historialClinico_pac') ?? '',
             'categoriaPaciente_pac' => $this->request->getPost('categoriaPaciente_pac'),
@@ -79,6 +74,8 @@ class PatientController extends BaseController
         }
 
         $rules = [
+            'username_pac'          => "required|min_length[4]|max_length[100]|is_unique[paciente.username_pac,idPaciente_pac,{$id}]",
+            'password_pac'          => 'required|min_length[6]',
             'nombreCompleto_pac'    => 'required|min_length[3]|max_length[150]',
             'categoriaPaciente_pac' => 'required',
             'correoElectronico_pac' => 'permit_empty|valid_email|max_length[150]',
@@ -91,6 +88,8 @@ class PatientController extends BaseController
         }
 
         $this->patientModel->update($id, [
+            'username_pac'          => $this->request->getPost('username_pac'),
+            'password_pac'          => $this->request->getPost('password_pac'),
             'nombreCompleto_pac'    => $this->request->getPost('nombreCompleto_pac'),
             'historialClinico_pac'  => $this->request->getPost('historialClinico_pac'),
             'categoriaPaciente_pac' => $this->request->getPost('categoriaPaciente_pac'),

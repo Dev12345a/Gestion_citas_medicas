@@ -29,6 +29,14 @@
                     <?= csrf_field() ?>
 
                     <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="username_pac" class="form-label">Usuario (Acceso) <span class="text-danger">*</span></label>
+                            <input type="text" id="username_pac" name="username_pac" class="form-control" required minlength="4" maxlength="100" value="<?= esc(old('username_pac', $patient['username_pac'])) ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password_pac" class="form-label">Contraseña (Acceso) <span class="text-danger">*</span></label>
+                            <input type="text" id="password_pac" name="password_pac" class="form-control" required minlength="6" value="<?= esc(old('password_pac', $patient['password_pac'])) ?>">
+                        </div>
                         <div class="col-md-8">
                             <label for="nombreCompleto_pac" class="form-label">Nombre Completo <span class="text-danger">*</span></label>
                             <input type="text" id="nombreCompleto_pac" name="nombreCompleto_pac"

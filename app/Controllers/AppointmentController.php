@@ -40,19 +40,8 @@ class AppointmentController extends BaseController
     public function create()
     {
         $doctorId = session()->get('user_id');
-        // Mostrar solo los pacientes de ESTE doctor
-        $db = \Config\Database::connect();
-        $patients = $db->query("
-            SELECT DISTINCT p.*
-            FROM paciente p
-            INNER JOIN citas c ON c.idPaciente_cit = p.idPaciente_pac
-            WHERE c.idMedico_cit = ?
-        ", [$doctorId])->getResultArray();
-
-        // Si no tiene pacientes aún, listar todos (para que pueda asignar)
-        if (empty($patients)) {
-            $patients = $this->patientModel->findAll();
-        }
+        // Mostrar todos los pacientes para poder asignar
+        $patients = $this->patientModel->orderBy('nombreCompleto_pac', 'ASC')->findAll();
 
         return view('appointments/create', [
             'patients'  => $patients,
@@ -106,14 +95,8 @@ class AppointmentController extends BaseController
         }
 
         $doctorId = session()->get('user_id');
-        $db = \Config\Database::connect();
-        $patients = $db->query("
-            SELECT DISTINCT p.*
-            FROM paciente p
-            INNER JOIN citas c ON c.idPaciente_cit = p.idPaciente_pac
-            WHERE c.idMedico_cit = ?
-        ", [$doctorId])->getResultArray();
-        if (empty($patients)) { $patients = $this->patientModel->findAll(); }
+        // Mostrar todos los pacientes para poder asignar
+        $patients = $this->patientModel->orderBy('nombreCompleto_pac', 'ASC')->findAll();
 
         return view('appointments/edit', [
             'appointment' => $appointment,
