@@ -20,20 +20,11 @@
         });
     </script>
 
+    <!-- Bootstrap 5 Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
-
-    <!-- DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Bootstrap Icons + Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -88,63 +79,76 @@
                     </div>
 
                     <ul class="nav nav-secondary">
-                        <!-- Dashboard -->
+                        <!-- Dashboard (todos) -->
                         <li class="nav-item <?= (uri_string() === '' || uri_string() === 'dashboard') ? 'active' : '' ?>">
                             <a href="<?= base_url('dashboard') ?>">
                                 <i class="fas fa-home"></i><p>Dashboard</p>
                             </a>
                         </li>
-                        <!-- Pacientes -->
+
+                        <?php if (session()->get('user_role') === 'doctor'): ?>
+                        <!-- ===== MENÚ DOCTOR ===== -->
+                        <li class="nav-item"><p class="nav-section"><span class="text-section" style="font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px">Gestión Clínica</span></p></li>
                         <li class="nav-item <?= strpos(uri_string(), 'patients') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('patients') ?>">
-                                <i class="fas fa-users"></i><p>Pacientes</p>
+                                <i class="fas fa-users"></i><p>Mis Pacientes</p>
                             </a>
                         </li>
-                        <!-- Citas -->
                         <li class="nav-item <?= strpos(uri_string(), 'appointments') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('appointments') ?>">
-                                <i class="fas fa-calendar-check"></i><p>Citas Médicas</p>
+                                <i class="fas fa-calendar-check"></i><p>Mis Citas</p>
                             </a>
                         </li>
-                        <!-- Servicios -->
                         <li class="nav-item <?= strpos(uri_string(), 'servicios') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('servicios') ?>">
                                 <i class="fas fa-stethoscope"></i><p>Servicios Médicos</p>
                             </a>
                         </li>
-                        <!-- Personal -->
+
+                        <li class="nav-item"><p class="nav-section"><span class="text-section" style="font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px">Administración</span></p></li>
                         <li class="nav-item <?= strpos(uri_string(), 'personal') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('personal') ?>">
                                 <i class="fas fa-user-md"></i><p>Personal Médico</p>
                             </a>
                         </li>
-                        <!-- Análisis -->
                         <li class="nav-item <?= strpos(uri_string(), 'analisis') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('analisis') ?>">
                                 <i class="fas fa-chart-bar"></i><p>Análisis Mercado</p>
                             </a>
                         </li>
-                        <!-- Atención -->
                         <li class="nav-item <?= strpos(uri_string(), 'atencion') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('atencion') ?>">
                                 <i class="fas fa-hand-holding-heart"></i><p>Planes de Atención</p>
                             </a>
                         </li>
-                        <!-- Plan Estratégico -->
                         <li class="nav-item <?= strpos(uri_string(), 'plan') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('plan') ?>">
                                 <i class="fas fa-bullseye"></i><p>Plan Estratégico</p>
                             </a>
                         </li>
-                        <!-- Sistema -->
                         <li class="nav-item <?= strpos(uri_string(), 'sistema') !== false ? 'active' : '' ?>">
                             <a href="<?= base_url('sistema') ?>">
                                 <i class="fas fa-cog"></i><p>Usuarios Sistema</p>
                             </a>
                         </li>
-                        <!-- Cerrar sesión -->
-                        <li class="nav-item">
-                            <a href="<?= base_url('logout') ?>">
+                        <?php else: ?>
+                        <!-- ===== MENÚ PACIENTE ===== -->
+                        <li class="nav-item"><p class="nav-section"><span class="text-section" style="font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px">Mi Área</span></p></li>
+                        <li class="nav-item <?= strpos(uri_string(), 'appointments') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('appointments') ?>">
+                                <i class="fas fa-calendar-check"></i><p>Mis Citas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item <?= strpos(uri_string(), 'mi-perfil') !== false ? 'active' : '' ?>">
+                            <a href="<?= base_url('mi-perfil') ?>">
+                                <i class="fas fa-id-card"></i><p>Mi Perfil</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+
+                        <!-- Cerrar sesión (todos) -->
+                        <li class="nav-item mt-2">
+                            <a href="<?= base_url('logout') ?>" style="color:#f87171">
                                 <i class="fas fa-sign-out-alt"></i><p>Cerrar Sesión</p>
                             </a>
                         </li>
@@ -182,8 +186,15 @@
                                                     <img src="<?= base_url('public/assets/img/profile.webp') ?>" alt="image profile" class="avatar-img rounded" />
                                                 </div>
                                                 <div class="u-text">
-                                                    <h4><?= session()->get('user_name') ?? 'Administrador' ?></h4>
-                                                    <p class="text-muted">Administrador</p>
+                                                    <h4><?= esc(session()->get('user_name') ?? 'Usuario') ?></h4>
+                                                    <p class="text-muted">
+                                                        <?php if (session()->get('user_role') === 'doctor'): ?>
+                                                            <span class="badge bg-primary"><i class="fas fa-user-md me-1"></i>Doctor</span>
+                                                        <?php else: ?>
+                                                            <span class="badge bg-success"><i class="fas fa-user me-1"></i>Paciente</span>
+                                                        <?php endif; ?>
+                                                    </p>
+                                                    <a href="<?= base_url('logout') ?>" class="btn btn-xs btn-danger mt-1"><i class="fas fa-sign-out-alt me-1"></i>Salir</a>
                                                 </div>
                                             </div>
                                         </li>

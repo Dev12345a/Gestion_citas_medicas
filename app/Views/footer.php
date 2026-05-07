@@ -37,13 +37,16 @@
 <script src="<?= base_url('public/assets/js/kaiadmin.min.js') ?>"></script>
 
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
+    // Inicializar DataTable si existe en la página
+    if ($('#dataTable').length) {
         $('#dataTable').DataTable({
-            "pageLength": 25, // Número de registros por defecto
+            "pageLength": 25,
+            "responsive": true,
             "language": {
                 "lengthMenu": "Mostrar _MENU_ registros por página",
-                "zeroRecords": "No se encontraron regitros",
-                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "zeroRecords": "No se encontraron registros",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
                 "infoEmpty": "No hay registros disponibles",
                 "infoFiltered": "(filtrado de _MAX_ registros totales)",
                 "search": "Buscar:",
@@ -55,24 +58,10 @@
                 }
             }
         });
-    });
-
-    $(document).ready(function() {
-        let patientId;
-        $('#modalEliminar').on('show.bs.modal', function(event) {
-            patientId = $(event.relatedTarget).data('id');
-        });
-
-        $('#confirmarEliminar').on('click', function() {
-            if (patientId) {
-                window.location.href = '<?= base_url('patients/delete/') ?>' + patientId;
-            } else {
-                alert('Error: No se pudo obtener el ID del paciente.');
-                $('#modalEliminar').modal('hide');
-            }
-        });
-    });
+    }
+});
 </script>
+
 <!-- Toastr CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
@@ -80,23 +69,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-    // Verificar si existe un mensaje de éxito
     <?php if (session()->getFlashdata('success')): ?>
-        toastr.success('<?= session()->getFlashdata('success'); ?>', 'Éxito', {
+        toastr.success('<?= addslashes(session()->getFlashdata('success')) ?>', 'Éxito', {
             "closeButton": true,
             "progressBar": true,
             "positionClass": "toast-top-right",
-            "timeOut": "10000"
+            "timeOut": "5000"
         });
     <?php endif; ?>
 
-    // Verificar si existe un mensaje de error
     <?php if (session()->getFlashdata('error')): ?>
-        toastr.error('<?= session()->getFlashdata('error'); ?>', 'Error', {
+        toastr.error('<?= addslashes(session()->getFlashdata('error')) ?>', 'Error', {
             "closeButton": true,
             "progressBar": true,
             "positionClass": "toast-top-right",
-            "timeOut": "10000"
+            "timeOut": "7000"
         });
     <?php endif; ?>
 </script>

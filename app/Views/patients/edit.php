@@ -1,120 +1,84 @@
-<?php include(APPPATH . 'Views/header.php'); ?>
+<?php echo view('header'); ?>
 
-<div class="container-fluid px-4">
-    <div class="d-flex align-items-center mb-4">
-        <a href="<?= base_url('patients') ?>" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-        <div>
-            <h2 class="fw-bold text-warning mb-0"><i class="fas fa-user-edit me-2"></i>Editar Paciente</h2>
-            <p class="text-muted mb-0">Modifica la información del paciente</p>
-        </div>
-    </div>
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="page-title mb-0"><i class="fas fa-user-edit me-2 text-warning"></i>Editar Paciente</h4>
+    <a href="<?= base_url('patients') ?>" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left me-1"></i> Volver
+    </a>
+</div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-4">
-            <form action="<?= base_url('patients/update/' . $patient['id']) ?>" method="post">
+<div class="row justify-content-center">
+    <div class="col-md-8">
 
-                <div class="row">
-                    <!-- Columna izquierda -->
-                    <div class="col-md-6">
-                        <h5 class="fw-semibold text-dark mb-3 pb-2 border-bottom"><i class="fas fa-id-card me-2 text-primary"></i>Datos Generales</h5>
+        <?php if (session()->getFlashdata('errors')): ?>
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    <?php foreach (session()->getFlashdata('errors') as $err): ?>
+                        <li><?= esc($err) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
 
-                        <div class="mb-3">
-                            <label for="code" class="form-label fw-semibold">Código <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="code" name="code"
-                                value="<?= esc($patient['code']) ?>" required maxlength="20">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>Datos del Paciente — #<?= $patient['idPaciente_pac'] ?></h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="<?= base_url('patients/update/'.$patient['idPaciente_pac']) ?>">
+                    <?= csrf_field() ?>
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="nombreCompleto_pac" class="form-label">Nombre Completo <span class="text-danger">*</span></label>
+                            <input type="text" id="nombreCompleto_pac" name="nombreCompleto_pac"
+                                   class="form-control" required minlength="3"
+                                   value="<?= esc(old('nombreCompleto_pac', $patient['nombreCompleto_pac'])) ?>">
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="first_name" class="form-label fw-semibold">Nombre(s) <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="first_name" name="first_name"
-                                    value="<?= esc($patient['first_name']) ?>" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="last_name" class="form-label fw-semibold">Apellido(s) <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="last_name" name="last_name"
-                                    value="<?= esc($patient['last_name']) ?>" required>
-                            </div>
+                        <div class="col-md-4">
+                            <label for="categoriaPaciente_pac" class="form-label">Categoría <span class="text-danger">*</span></label>
+                            <select id="categoriaPaciente_pac" name="categoriaPaciente_pac" class="form-select" required>
+                                <option value="">-- Seleccionar --</option>
+                                <?php foreach (['Nuevo','Frecuente','Ocasional','VIP'] as $cat): ?>
+                                    <option value="<?= $cat ?>" <?= old('categoriaPaciente_pac', $patient['categoriaPaciente_pac']) === $cat ? 'selected' : '' ?>><?= $cat ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="date_of_birth" class="form-label fw-semibold">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
-                                    value="<?= esc($patient['date_of_birth']) ?>">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="gender" class="form-label fw-semibold">Género</label>
-                                <select class="form-control" id="gender" name="gender">
-                                    <option value="M" <?= $patient['gender']==='M' ? 'selected' : '' ?>>Masculino</option>
-                                    <option value="F" <?= $patient['gender']==='F' ? 'selected' : '' ?>>Femenino</option>
-                                    <option value="O" <?= $patient['gender']==='O' ? 'selected' : '' ?>>Otro</option>
-                                </select>
-                            </div>
+                        <div class="col-md-6">
+                            <label for="correoElectronico_pac" class="form-label">Correo Electrónico</label>
+                            <input type="email" id="correoElectronico_pac" name="correoElectronico_pac"
+                                   class="form-control"
+                                   value="<?= esc(old('correoElectronico_pac', $patient['correoElectronico_pac'])) ?>">
                         </div>
-                        <div class="mb-3">
-                            <label for="address" class="form-label fw-semibold">Dirección</label>
-                            <input type="text" class="form-control" id="address" name="address"
-                                value="<?= esc($patient['address'] ?? '') ?>">
+                        <div class="col-md-6">
+                            <label for="telefono_pac" class="form-label">Teléfono</label>
+                            <input type="text" id="telefono_pac" name="telefono_pac"
+                                   class="form-control"
+                                   value="<?= esc(old('telefono_pac', $patient['telefono_pac'])) ?>">
+                        </div>
+                        <div class="col-12">
+                            <label for="direccion_pac" class="form-label">Dirección</label>
+                            <input type="text" id="direccion_pac" name="direccion_pac"
+                                   class="form-control"
+                                   value="<?= esc(old('direccion_pac', $patient['direccion_pac'])) ?>">
+                        </div>
+                        <div class="col-12">
+                            <label for="historialClinico_pac" class="form-label">Historial Clínico</label>
+                            <textarea id="historialClinico_pac" name="historialClinico_pac"
+                                      class="form-control" rows="3"><?= esc(old('historialClinico_pac', $patient['historialClinico_pac'])) ?></textarea>
                         </div>
                     </div>
 
-                    <!-- Columna derecha -->
-                    <div class="col-md-6">
-                        <h5 class="fw-semibold text-dark mb-3 pb-2 border-bottom"><i class="fas fa-heartbeat me-2 text-danger"></i>Contacto y Datos Médicos</h5>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label fw-semibold">Correo Electrónico</label>
-                                <input type="email" class="form-control" id="email" name="email"
-                                    value="<?= esc($patient['email'] ?? '') ?>">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="phone" class="form-label fw-semibold">Teléfono <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="phone" name="phone" required
-                                    value="<?= esc($patient['phone'] ?? '') ?>" maxlength="10">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="blood_type" class="form-label fw-semibold">Tipo de Sangre</label>
-                                <select class="form-control" id="blood_type" name="blood_type">
-                                    <?php foreach(['Desconocido','A+','A-','B+','B-','AB+','AB-','O+','O-'] as $bt): ?>
-                                        <option value="<?= $bt ?>" <?= ($patient['blood_type'] ?? 'Desconocido') === $bt ? 'selected' : '' ?>><?= $bt ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3 d-flex align-items-end">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active"
-                                        value="1" <?= $patient['is_active'] ? 'checked' : '' ?>>
-                                    <label class="form-check-label fw-semibold" for="is_active">Paciente Activo</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="allergies" class="form-label fw-semibold">Alergias conocidas</label>
-                            <textarea class="form-control" id="allergies" name="allergies" rows="2"><?= esc($patient['allergies'] ?? '') ?></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="notes" class="form-label fw-semibold">Notas / Antecedentes</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="2"><?= esc($patient['notes'] ?? '') ?></textarea>
-                        </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save me-1"></i> Actualizar Paciente
+                        </button>
+                        <a href="<?= base_url('patients') ?>" class="btn btn-secondary">Cancelar</a>
                     </div>
-                </div>
-
-                <hr>
-                <div class="d-flex justify-content-end gap-2">
-                    <a href="<?= base_url('patients/show/' . $patient['id']) ?>" class="btn btn-outline-secondary px-4">Cancelar</a>
-                    <button type="submit" class="btn btn-warning px-5">
-                        <i class="fas fa-save me-2"></i>Actualizar Paciente
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-$('#phone').on('input', function() { $(this).val($(this).val().replace(/\D/g,'').substring(0,10)); });
-</script>
-
-<?php include(APPPATH . 'Views/footer.php'); ?>
+<?php echo view('footer'); ?>

@@ -13,88 +13,146 @@ class PatientController extends BaseController
         $this->patientModel = new PatientModel();
     }
 
-    /**
-     * Listado de pacientes.
-     */
+    // ── INDEX: Doctor ve SOLO sus pacientes (vía citas) ────────
     public function index()
     {
-        $data['patients'] = $this->patientModel->findAll();
-        return view('patients/index', $data);
+        $doctorId = session()->get('user_id');
+        $db = \Config\Database::connect();
+
+        // Los pacientes de este doctor son los que tienen citas con él
+        $patients = $db->query("
+            SELECT DISTINCT p.*
+            FROM paciente p
+            INNER JOIN citas c ON c.idPaciente_cit = p.idPaciente_pac
+            WHERE c.idMedico_cit = ?
+            ORDER BY p.nombreCompleto_pac ASC
+        ", [$doctorId])->getResultArray();
+
+        return view('patients/index', ['patients' => $patients]);
     }
 
-    /**
-     * Formulario para registrar nuevo paciente.
-     */
     public function create()
     {
         return view('patients/create');
     }
 
-    /**
-     * Guardar nuevo paciente en la BD.
-     */
     public function store()
     {
         $rules = [
-            'nombreCompleto_pac'   => 'required|min_length[3]|max_length[150]',
-            'categoriaPaciente_pac'=> 'required',
-            'correoElectronico_pac'=> 'permit_empty|valid_email',
-            'telefono_pac'         => 'permit_empty|max_length[20]',
+            'nombreCompleto_pac'    => 'required|min_length[3]|max_length[150]',
+            'categoriaPaciente_pac' => 'required',
+            'correoElectronico_pac' => 'permit_empty|valid_email|max_length[150]',
+            'telefono_pac'          => 'permit_empty|max_length[20]',
+            'direccion_pac'         => 'permit_empty|max_length[150]',
         ];
 
-        $messages = [
-            'nombreCompleto_pac' => [
-                'required'   => 'El nombre completo es obligatorio.',
-                'min_length' => 'El nombre debe tener al menos 3 caracteres.',
-            ],
-        ];
-
-        if (!$this->validate($rules, $messages)) {
-            return redirect()->back()->withInput()->with('error',
-                implode('<br>', array_values($this->validator->getErrors()))
-            );
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $data = [
+        $this->patientModel->insert([
+            'nombreCompleto_pac'    => $this->request->getPost('nombreCompleto_pac'),
+            'historialClinico_pac'  => $this->request->getPost('historialClinico_pac') ?? '',
+            'categoriaPaciente_pac' => $this->request->getPost('categoriaPaciente_pac'),
+            'correoElectronico_pac' => $this->request->getPost('correoElectronico_pac'),
+            'telefono_pac'          => $this->request->getPost('telefono_pac'),
+            'direccion_pac'         => $this->request->getPost('direccion_pac'),
+        ]);
+
+        return redirect()->to(base_url('patients'))->with('success', 'Paciente registrado correctamente.');
+    }
+
+    public function edit(int $id)
+    {
+        $patient = $this->patientModel->find($id);
+        if (!$patient) {
+            return redirect()->to(base_url('patients'))->with('error', 'Paciente no encontrado.');
+        }
+        return view('patients/edit', ['patient' => $patient]);
+    }
+
+    public function update(int $id)
+    {
+        $patient = $this->patientModel->find($id);
+        if (!$patient) {
+            return redirect()->to(base_url('patients'))->with('error', 'Paciente no encontrado.');
+        }
+
+        $rules = [
+            'nombreCompleto_pac'    => 'required|min_length[3]|max_length[150]',
+            'categoriaPaciente_pac' => 'required',
+            'correoElectronico_pac' => 'permit_empty|valid_email|max_length[150]',
+            'telefono_pac'          => 'permit_empty|max_length[20]',
+            'direccion_pac'         => 'permit_empty|max_length[150]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $this->patientModel->update($id, [
             'nombreCompleto_pac'    => $this->request->getPost('nombreCompleto_pac'),
             'historialClinico_pac'  => $this->request->getPost('historialClinico_pac'),
             'categoriaPaciente_pac' => $this->request->getPost('categoriaPaciente_pac'),
             'correoElectronico_pac' => $this->request->getPost('correoElectronico_pac'),
             'telefono_pac'          => $this->request->getPost('telefono_pac'),
             'direccion_pac'         => $this->request->getPost('direccion_pac'),
-        ];
+        ]);
 
-        if ($this->patientModel->insert($data)) {
-            return redirect()->to(base_url('patients'))->with('success', 'Paciente registrado correctamente.');
-        }
-
-        return redirect()->back()->withInput()->with('error', 'Error al guardar. Intente nuevamente.');
-    }
-
-    // ── Stubs para no romper rutas existentes ────────────────
-
-    public function show(int $id)
-    {
-        return redirect()->to(base_url('patients'));
-    }
-
-    public function edit(int $id)
-    {
-        return redirect()->to(base_url('patients'));
-    }
-
-    public function update(int $id)
-    {
-        return redirect()->to(base_url('patients'));
+        return redirect()->to(base_url('patients'))->with('success', 'Paciente actualizado correctamente.');
     }
 
     public function delete(int $id)
     {
-        return redirect()->to(base_url('patients'));
+        $this->patientModel->delete($id);
+        return redirect()->to(base_url('patients'))->with('success', 'Paciente eliminado correctamente.');
     }
 
+    // ── MI PERFIL: El propio paciente ve y edita su info ───────
+    public function miPerfil()
+    {
+        $pacienteId = session()->get('user_id');
+        $patient    = $this->patientModel->find($pacienteId);
+
+        if (!$patient) {
+            return redirect()->to(base_url('dashboard'))->with('error', 'Perfil no encontrado.');
+        }
+
+        return view('patients/mi_perfil', ['patient' => $patient]);
+    }
+
+    public function miPerfilUpdate()
+    {
+        $pacienteId = session()->get('user_id');
+        $patient    = $this->patientModel->find($pacienteId);
+
+        if (!$patient) {
+            return redirect()->to(base_url('dashboard'))->with('error', 'Perfil no encontrado.');
+        }
+
+        $rules = [
+            'correoElectronico_pac' => 'permit_empty|valid_email|max_length[150]',
+            'telefono_pac'          => 'permit_empty|max_length[20]',
+            'direccion_pac'         => 'permit_empty|max_length[150]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $this->patientModel->update($pacienteId, [
+            'correoElectronico_pac' => $this->request->getPost('correoElectronico_pac'),
+            'telefono_pac'          => $this->request->getPost('telefono_pac'),
+            'direccion_pac'         => $this->request->getPost('direccion_pac'),
+            'historialClinico_pac'  => $this->request->getPost('historialClinico_pac'),
+        ]);
+
+        return redirect()->to(base_url('mi-perfil'))->with('success', 'Tu perfil ha sido actualizado.');
+    }
+
+    // ── validateCode (stub conservado) ─────────────────────────
     public function validateCode(string $code)
     {
-        return $this->response->setJSON(['data' => []]);
+        return redirect()->to(base_url('patients'));
     }
 }

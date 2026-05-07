@@ -23,6 +23,17 @@ class SistemaController extends BaseController
 
     public function store()
     {
+        $rules = [
+            'nombreUsuario_sis'  => 'required|min_length[3]|max_length[50]',
+            'rolUsuario_sis'     => 'required',
+            'motorBaseDatos_sis' => 'required',
+            'nivelSeguridad_sis' => 'required',
+            'tipoIntegracion_sis'=> 'required',
+            'estadoUsuario_sis'  => 'required',
+        ];
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
         $data = [
             'nombreUsuario_sis'  => $this->request->getPost('nombreUsuario_sis'),
             'rolUsuario_sis'     => $this->request->getPost('rolUsuario_sis'),
@@ -32,16 +43,29 @@ class SistemaController extends BaseController
             'estadoUsuario_sis'  => $this->request->getPost('estadoUsuario_sis'),
         ];
         $this->model->insert($data);
-        return redirect()->to(base_url('sistema'))->with('success', 'Usuario del sistema registrado.');
+        return redirect()->to(base_url('sistema'))->with('success', 'Usuario del sistema registrado correctamente.');
     }
 
     public function edit(int $id)
     {
-        return view('sistema/edit', ['item' => $this->model->find($id)]);
+        $item = $this->model->find($id);
+        if (!$item) return redirect()->to(base_url('sistema'))->with('error', 'Usuario no encontrado.');
+        return view('sistema/edit', ['item' => $item]);
     }
 
     public function update(int $id)
     {
+        $rules = [
+            'nombreUsuario_sis'  => 'required|min_length[3]|max_length[50]',
+            'rolUsuario_sis'     => 'required',
+            'motorBaseDatos_sis' => 'required',
+            'nivelSeguridad_sis' => 'required',
+            'tipoIntegracion_sis'=> 'required',
+            'estadoUsuario_sis'  => 'required',
+        ];
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
         $data = [
             'nombreUsuario_sis'  => $this->request->getPost('nombreUsuario_sis'),
             'rolUsuario_sis'     => $this->request->getPost('rolUsuario_sis'),
@@ -51,12 +75,12 @@ class SistemaController extends BaseController
             'estadoUsuario_sis'  => $this->request->getPost('estadoUsuario_sis'),
         ];
         $this->model->update($id, $data);
-        return redirect()->to(base_url('sistema'))->with('success', 'Usuario actualizado.');
+        return redirect()->to(base_url('sistema'))->with('success', 'Usuario actualizado correctamente.');
     }
 
     public function delete(int $id)
     {
         $this->model->delete($id);
-        return redirect()->to(base_url('sistema'))->with('success', 'Usuario eliminado.');
+        return redirect()->to(base_url('sistema'))->with('success', 'Usuario eliminado correctamente.');
     }
 }

@@ -23,6 +23,16 @@ class AnalisisController extends BaseController
 
     public function store()
     {
+        $rules = [
+            'nivelDemanda_ana'     => 'required',
+            'fechaAnalisis_ana'    => 'required|valid_date',
+            'nivelCompetencia_ana' => 'required',
+            'tendenciaSalud_ana'   => 'required|max_length[100]',
+            'normativaVigente_ana' => 'required|max_length[100]',
+        ];
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
         $data = [
             'nivelDemanda_ana'     => $this->request->getPost('nivelDemanda_ana'),
             'fechaAnalisis_ana'    => $this->request->getPost('fechaAnalisis_ana'),
@@ -31,16 +41,28 @@ class AnalisisController extends BaseController
             'normativaVigente_ana' => $this->request->getPost('normativaVigente_ana'),
         ];
         $this->model->insert($data);
-        return redirect()->to(base_url('analisis'))->with('success', 'Análisis registrado.');
+        return redirect()->to(base_url('analisis'))->with('success', 'Análisis de mercado registrado correctamente.');
     }
 
     public function edit(int $id)
     {
-        return view('analisis/edit', ['item' => $this->model->find($id)]);
+        $item = $this->model->find($id);
+        if (!$item) return redirect()->to(base_url('analisis'))->with('error', 'Análisis no encontrado.');
+        return view('analisis/edit', ['item' => $item]);
     }
 
     public function update(int $id)
     {
+        $rules = [
+            'nivelDemanda_ana'     => 'required',
+            'fechaAnalisis_ana'    => 'required|valid_date',
+            'nivelCompetencia_ana' => 'required',
+            'tendenciaSalud_ana'   => 'required|max_length[100]',
+            'normativaVigente_ana' => 'required|max_length[100]',
+        ];
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
         $data = [
             'nivelDemanda_ana'     => $this->request->getPost('nivelDemanda_ana'),
             'fechaAnalisis_ana'    => $this->request->getPost('fechaAnalisis_ana'),
@@ -49,12 +71,12 @@ class AnalisisController extends BaseController
             'normativaVigente_ana' => $this->request->getPost('normativaVigente_ana'),
         ];
         $this->model->update($id, $data);
-        return redirect()->to(base_url('analisis'))->with('success', 'Análisis actualizado.');
+        return redirect()->to(base_url('analisis'))->with('success', 'Análisis actualizado correctamente.');
     }
 
     public function delete(int $id)
     {
         $this->model->delete($id);
-        return redirect()->to(base_url('analisis'))->with('success', 'Análisis eliminado.');
+        return redirect()->to(base_url('analisis'))->with('success', 'Análisis eliminado correctamente.');
     }
 }

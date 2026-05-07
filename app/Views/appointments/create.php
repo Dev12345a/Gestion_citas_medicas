@@ -1,140 +1,105 @@
-<?php include(APPPATH . 'Views/header.php'); ?>
+<?php echo view('header'); ?>
 
-<div class="container-fluid px-4">
-    <div class="d-flex align-items-center mb-4">
-        <a href="<?= base_url('appointments') ?>" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
-        <div>
-            <h2 class="fw-bold text-primary mb-0"><i class="fas fa-calendar-plus me-2"></i>Agendar Nueva Cita</h2>
-            <p class="text-muted mb-0">Registra una nueva cita médica</p>
-        </div>
-    </div>
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="page-title mb-0"><i class="fas fa-calendar-plus me-2 text-success"></i>Nueva Cita Médica</h4>
+    <a href="<?= base_url('appointments') ?>" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left me-1"></i> Volver
+    </a>
+</div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-4">
-            <form action="<?= base_url('appointments/store') ?>" method="post">
-                <div class="row">
-                    <!-- Columna izquierda -->
-                    <div class="col-md-6">
-                        <h5 class="fw-semibold mb-3 pb-2 border-bottom"><i class="fas fa-user me-2 text-primary"></i>Datos de la Cita</h5>
+<div class="row justify-content-center">
+    <div class="col-md-8">
 
-                        <div class="mb-3">
-                            <label for="patient_id" class="form-label fw-semibold">Paciente <span class="text-danger">*</span></label>
-                            <select class="form-control" id="patient_id" name="patient_id" required>
-                                <option value="">Selecciona un paciente...</option>
+        <?php if (session()->getFlashdata('errors')): ?>
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    <?php foreach (session()->getFlashdata('errors') as $err): ?>
+                        <li><?= esc($err) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Formulario de Nueva Cita</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="<?= base_url('appointments/store') ?>">
+                    <?= csrf_field() ?>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="idCita_cit" class="form-label">ID de Cita <span class="text-danger">*</span></label>
+                            <input type="text" id="idCita_cit" name="idCita_cit" class="form-control" required
+                                   placeholder="Ej: Cita #004" value="<?= old('idCita_cit') ?>">
+                            <small class="text-muted">Debe ser único en el sistema.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fechaCita_cit" class="form-label">Fecha de Cita <span class="text-danger">*</span></label>
+                            <input type="date" id="fechaCita_cit" name="fechaCita_cit" class="form-control" required
+                                   value="<?= old('fechaCita_cit') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="idPaciente_cit" class="form-label">Paciente <span class="text-danger">*</span></label>
+                            <select id="idPaciente_cit" name="idPaciente_cit" class="form-select" required>
+                                <option value="">-- Seleccionar Paciente --</option>
                                 <?php foreach ($patients as $p): ?>
-                                    <option value="<?= $p['id'] ?>"
-                                        <?= ($preselect_patient ?? '') == $p['id'] ? 'selected' : '' ?>>
-                                        <?= esc($p['code'] . ' — ' . $p['first_name'] . ' ' . $p['last_name']) ?>
+                                    <option value="<?= $p['idPaciente_pac'] ?>"
+                                        <?= old('idPaciente_cit') == $p['idPaciente_pac'] ? 'selected' : '' ?>>
+                                        <?= esc($p['nombreCompleto_pac']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="specialty_id" class="form-label fw-semibold">Especialidad <span class="text-danger">*</span></label>
-                            <select class="form-control" id="specialty_id" name="specialty_id" required>
-                                <option value="">Selecciona especialidad...</option>
-                                <?php foreach ($specialties as $sp): ?>
-                                    <option value="<?= $sp['id'] ?>"><?= esc($sp['name']) ?></option>
+                        <div class="col-md-6">
+                            <label for="idServicio_cit" class="form-label">Servicio Médico <span class="text-danger">*</span></label>
+                            <select id="idServicio_cit" name="idServicio_cit" class="form-select" required>
+                                <option value="">-- Seleccionar Servicio --</option>
+                                <?php foreach ($servicios as $s): ?>
+                                    <option value="<?= $s['idServicio_ser'] ?>"
+                                        <?= old('idServicio_cit') == $s['idServicio_ser'] ? 'selected' : '' ?>>
+                                        <?= esc($s['nombreServicio_ser']) ?> ($<?= number_format($s['precioConsulta_ser'], 2) ?>)
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="doctor_id" class="form-label fw-semibold">Doctor <span class="text-danger">*</span></label>
-                            <select class="form-control" id="doctor_id" name="doctor_id" required disabled>
-                                <option value="">Primero selecciona una especialidad</option>
+                        <div class="col-md-6">
+                            <label for="estadoCita_cit" class="form-label">Estado <span class="text-danger">*</span></label>
+                            <select id="estadoCita_cit" name="estadoCita_cit" class="form-select" required>
+                                <option value="">-- Seleccionar --</option>
+                                <?php foreach (['Pendiente','Confirmada','Atendida','Cancelada','No Asistió'] as $e): ?>
+                                    <option value="<?= $e ?>" <?= old('estadoCita_cit') === $e ? 'selected' : '' ?>><?= $e ?></option>
+                                <?php endforeach; ?>
                             </select>
-                            <div id="doctor_schedule" class="form-text text-success fw-semibold mt-1"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tipoRecordatorio_cit" class="form-label">Tipo de Recordatorio <span class="text-danger">*</span></label>
+                            <select id="tipoRecordatorio_cit" name="tipoRecordatorio_cit" class="form-select" required>
+                                <option value="">-- Seleccionar --</option>
+                                <?php foreach (['SMS','Email','WhatsApp','Notificación App'] as $t): ?>
+                                    <option value="<?= $t ?>" <?= old('tipoRecordatorio_cit') === $t ? 'selected' : '' ?>><?= $t ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nivelSatisfaccion_cit" class="form-label">Nivel de Satisfacción <span class="text-danger">*</span></label>
+                            <input type="number" id="nivelSatisfaccion_cit" name="nivelSatisfaccion_cit"
+                                   class="form-control" min="1" max="5" step="0.1" required
+                                   placeholder="1.0 - 5.0" value="<?= old('nivelSatisfaccion_cit', '5.0') ?>">
                         </div>
                     </div>
 
-                    <!-- Columna derecha -->
-                    <div class="col-md-6">
-                        <h5 class="fw-semibold mb-3 pb-2 border-bottom"><i class="fas fa-clock me-2 text-success"></i>Fecha, Hora y Motivo</h5>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="appointment_date" class="form-label fw-semibold">Fecha <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="appointment_date" name="appointment_date"
-                                    min="<?= date('Y-m-d') ?>" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="appointment_time" class="form-label fw-semibold">Hora <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control" id="appointment_time" name="appointment_time"
-                                    min="07:00" max="21:00" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="reason" class="form-label fw-semibold">Motivo de la cita <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="reason" name="reason" rows="4" required
-                                placeholder="Describe brevemente el motivo de consulta..."></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="notes" class="form-label fw-semibold">Notas adicionales</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="2"
-                                placeholder="Observaciones opcionales..."></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="status" class="form-label fw-semibold">Estado inicial</label>
-                            <select class="form-control" id="status" name="status">
-                                <option value="scheduled">Agendada</option>
-                                <option value="confirmed">Confirmada</option>
-                            </select>
-                        </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-1"></i> Guardar Cita
+                        </button>
+                        <a href="<?= base_url('appointments') ?>" class="btn btn-secondary">Cancelar</a>
                     </div>
-                </div>
-
-                <hr>
-                <div class="d-flex justify-content-end gap-2">
-                    <a href="<?= base_url('appointments') ?>" class="btn btn-outline-secondary px-4">Cancelar</a>
-                    <button type="submit" class="btn btn-primary px-5"><i class="fas fa-save me-2"></i>Guardar Cita</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-$(document).ready(function() {
-    // AJAX: cargar doctores según especialidad
-    $('#specialty_id').on('change', function() {
-        const specId = $(this).val();
-        const $doctorSelect = $('#doctor_id');
-        const $schedule = $('#doctor_schedule');
-
-        $doctorSelect.html('<option value="">Cargando...</option>').prop('disabled', true);
-        $schedule.text('');
-
-        if (!specId) {
-            $doctorSelect.html('<option value="">Primero selecciona una especialidad</option>');
-            return;
-        }
-
-        $.getJSON('<?= base_url('doctors/bySpecialty/') ?>' + specId, function(data) {
-            if (data.length === 0) {
-                $doctorSelect.html('<option value="">Sin doctores disponibles para esta especialidad</option>');
-                return;
-            }
-            let opts = '<option value="">Selecciona un doctor...</option>';
-            data.forEach(function(doc) {
-                opts += `<option value="${doc.id}" data-schedule="${doc.schedule ?? ''}">
-                    Dr(a). ${doc.first_name} ${doc.last_name} — ${doc.code}
-                </option>`;
-            });
-            $doctorSelect.html(opts).prop('disabled', false);
-        });
-    });
-
-    // Mostrar horario al seleccionar doctor
-    $('#doctor_id').on('change', function() {
-        const schedule = $('option:selected', this).data('schedule');
-        $('#doctor_schedule').text(schedule ? '🕐 ' + schedule : '');
-    });
-});
-</script>
-
-<?php include(APPPATH . 'Views/footer.php'); ?>
+<?php echo view('footer'); ?>
