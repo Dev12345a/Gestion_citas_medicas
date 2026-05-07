@@ -146,15 +146,18 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                         <input type="email" id="correoElectronico_pac" name="correoElectronico_pac" class="form-control"
-                               placeholder="correo@ejemplo.com" value="<?= old('correoElectronico_pac') ?>" required>
+                               placeholder="correo@ejemplo.com" value="<?= old('correoElectronico_pac') ?>" required
+                               oninvalid="this.setCustomValidity('Por favor, ingrese un correo electrónico válido.')"
+                               oninput="this.setCustomValidity('')">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <label for="telefono_pac">Teléfono <span style="color:#f87171">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                        <input type="text" id="telefono_pac" name="telefono_pac" class="form-control"
-                               placeholder="Ej: 0991234567" value="<?= old('telefono_pac') ?>" required>
+                        <input type="tel" id="telefono_pac" name="telefono_pac" class="form-control"
+                               placeholder="Ej: 0991234567" value="<?= old('telefono_pac') ?>" required
+                               oninput="this.value = this.value.replace(/[^0-9+ ]/g, '')">
                     </div>
                 </div>
                 <div class="col-12">

@@ -65,6 +65,7 @@ class AppointmentController extends BaseController
         $rules = [
             'idCita_cit'            => 'required|max_length[50]|is_unique[citas.idCita_cit]',
             'fechaCita_cit'         => 'required|valid_date',
+            'horaCita_cit'          => 'required',
             'estadoCita_cit'        => 'required',
             'tipoRecordatorio_cit'  => 'required',
             'nivelSatisfaccion_cit' => 'required|decimal',
@@ -79,6 +80,7 @@ class AppointmentController extends BaseController
         $this->appointmentModel->insert([
             'idCita_cit'            => $this->request->getPost('idCita_cit'),
             'fechaCita_cit'         => $this->request->getPost('fechaCita_cit'),
+            'horaCita_cit'          => $this->request->getPost('horaCita_cit'),
             'estadoCita_cit'        => $this->request->getPost('estadoCita_cit'),
             'tipoRecordatorio_cit'  => $this->request->getPost('tipoRecordatorio_cit'),
             'nivelSatisfaccion_cit' => $this->request->getPost('nivelSatisfaccion_cit'),
@@ -132,6 +134,7 @@ class AppointmentController extends BaseController
 
         $rules = [
             'fechaCita_cit'         => 'required|valid_date',
+            'horaCita_cit'          => 'required',
             'estadoCita_cit'        => 'required',
             'tipoRecordatorio_cit'  => 'required',
             'nivelSatisfaccion_cit' => 'required|decimal',
@@ -145,6 +148,7 @@ class AppointmentController extends BaseController
 
         $this->appointmentModel->update($id, [
             'fechaCita_cit'         => $this->request->getPost('fechaCita_cit'),
+            'horaCita_cit'          => $this->request->getPost('horaCita_cit'),
             'estadoCita_cit'        => $this->request->getPost('estadoCita_cit'),
             'tipoRecordatorio_cit'  => $this->request->getPost('tipoRecordatorio_cit'),
             'nivelSatisfaccion_cit' => $this->request->getPost('nivelSatisfaccion_cit'),

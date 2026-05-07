@@ -17,6 +17,7 @@
                             <tr>
                                 <th>ID Médico</th>
                                 <th>ID Personal</th>
+                                <th>Nombre</th>
                                 <th>Especialidad</th>
                                 <th>Horario Laboral</th>
                                 <th>Nivel Desempeño</th>
@@ -29,6 +30,7 @@
                             <tr>
                                 <td><?= $r['idMedico_per'] ?></td>
                                 <td><?= $r['idPersonal_per'] ?></td>
+                                <td><strong><?= esc($r['username_per']) ?></strong></td>
                                 <td><strong><?= esc($r['especialidadMedica_per']) ?></strong></td>
                                 <td><i class="fas fa-clock text-muted me-1"></i><?= esc($r['horarioLaboral_per']) ?></td>
                                 <td>

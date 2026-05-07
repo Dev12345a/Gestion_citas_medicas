@@ -41,17 +41,20 @@
                         <div class="col-md-4">
                             <label for="precioConsulta_ser" class="form-label">Precio ($) <span class="text-danger">*</span></label>
                             <input type="number" id="precioConsulta_ser" name="precioConsulta_ser" class="form-control"
-                                   step="0.01" min="0" required placeholder="25.00" value="<?= old('precioConsulta_ser') ?>">
+                                   step="0.01" min="0" required placeholder="25.00" value="<?= old('precioConsulta_ser') ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                         <div class="col-md-4">
                             <label for="porcentajeRentabilidad_ser" class="form-label">Rentabilidad (%) <span class="text-danger">*</span></label>
                             <input type="number" id="porcentajeRentabilidad_ser" name="porcentajeRentabilidad_ser"
                                    class="form-control" step="0.01" min="0" max="100" required
-                                   placeholder="15.00" value="<?= old('porcentajeRentabilidad_ser') ?>">
+                                   placeholder="15.00" value="<?= old('porcentajeRentabilidad_ser') ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                         <div class="col-md-4">
                             <label for="duracionServicio_ser" class="form-label">Duración (min) <span class="text-danger">*</span></label>
                             <input type="number" id="duracionServicio_ser" name="duracionServicio_ser" class="form-control"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                                    min="1" required placeholder="30" value="<?= old('duracionServicio_ser') ?>">
                         </div>
                     </div>

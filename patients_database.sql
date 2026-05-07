@@ -173,6 +173,7 @@ INSERT INTO `paciente` VALUES
 CREATE TABLE `citas` (
   `idCita_cit` varchar(50) NOT NULL,
   `fechaCita_cit` date NOT NULL,
+  `horaCita_cit` time NOT NULL,
   `estadoCita_cit` varchar(30) NOT NULL DEFAULT 'Pendiente',
   `tipoRecordatorio_cit` varchar(50) NOT NULL,
   `nivelSatisfaccion_cit` decimal(3,1) NOT NULL DEFAULT 5.0,
@@ -190,15 +191,15 @@ CREATE TABLE `citas` (
 
 -- Citas del Dr. Cardio (idMedico=10) con pacientes 1, 2, 5
 INSERT INTO `citas` VALUES
-('Cita #001', '2026-05-15', 'Pendiente',  'SMS',              4.5, 1, 1, 10),
-('Cita #002', '2026-05-10', 'Atendida',   'Email',            5.0, 2, 3, 10),
-('Cita #005', '2026-06-01', 'Confirmada', 'WhatsApp',         4.8, 5, 1, 10),
+('Cita #001', '2026-05-15', '09:00:00', 'Pendiente',  'SMS',              4.5, 1, 1, 10),
+('Cita #002', '2026-05-10', '10:30:00', 'Atendida',   'Email',            5.0, 2, 3, 10),
+('Cita #005', '2026-06-01', '14:00:00', 'Confirmada', 'WhatsApp',         4.8, 5, 1, 10),
 -- Citas del Dr. Pediatra (idMedico=11) con paciente 3, 4
-('Cita #003', '2026-04-28', 'Atendida',   'WhatsApp',         4.0, 3, 2, 11),
-('Cita #004', '2026-05-20', 'Pendiente',  'Notificación App', 4.5, 4, 2, 11),
+('Cita #003', '2026-04-28', '11:15:00', 'Atendida',   'WhatsApp',         4.0, 3, 2, 11),
+('Cita #004', '2026-05-20', '16:00:00', 'Pendiente',  'Notificación App', 4.5, 4, 2, 11),
 -- Citas del Dr. Admin / Medicina General (idMedico=12)
-('Cita #006', '2026-05-25', 'Pendiente',  'SMS',              5.0, 1, 6, 12),
-('Cita #007', '2026-05-18', 'Cancelada',  'Email',            2.5, 2, 6, 12);
+('Cita #006', '2026-05-25', '08:30:00', 'Pendiente',  'SMS',              5.0, 1, 6, 12),
+('Cita #007', '2026-05-18', '09:45:00', 'Cancelada',  'Email',            2.5, 2, 6, 12);
 
 SET FOREIGN_KEY_CHECKS = 1;
 

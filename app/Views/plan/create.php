@@ -32,12 +32,14 @@
                         <div class="col-md-6">
                             <label for="indicadorRendimiento_pla" class="form-label">Indicador KPI (%) <span class="text-danger">*</span></label>
                             <input type="number" id="indicadorRendimiento_pla" name="indicadorRendimiento_pla" class="form-control"
-                                   step="0.01" min="0" max="100" required placeholder="92.50" value="<?= old('indicadorRendimiento_pla') ?>">
+                                   step="0.01" min="0" max="100" required placeholder="92.50" value="<?= old('indicadorRendimiento_pla') ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                         <div class="col-md-6">
                             <label for="metaAnual_pla" class="form-label">Meta Anual <span class="text-danger">*</span></label>
                             <input type="number" id="metaAnual_pla" name="metaAnual_pla" class="form-control"
-                                   min="1" required placeholder="50" value="<?= old('metaAnual_pla') ?>">
+                                   min="1" required placeholder="50" value="<?= old('metaAnual_pla') ?>"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
                         </div>
                     </div>
                     <div class="d-flex gap-2 mt-4">
