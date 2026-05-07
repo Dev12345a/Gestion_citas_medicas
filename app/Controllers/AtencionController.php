@@ -23,6 +23,15 @@ class AtencionController extends BaseController
 
     public function store()
     {
+        $rules = [
+            'tipoPlanAtencion_ate'    => 'required|max_length[100]',
+            'horarioDisponible_ate'   => 'required|max_length[50]',
+            'promocionActiva_ate'     => 'required|max_length[100]',
+            'nivelPersonalizacion_ate'=> 'required|max_length[100]',
+        ];
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
         $data = [
             'tipoPlanAtencion_ate'    => $this->request->getPost('tipoPlanAtencion_ate'),
             'horarioDisponible_ate'   => $this->request->getPost('horarioDisponible_ate'),
@@ -30,16 +39,27 @@ class AtencionController extends BaseController
             'nivelPersonalizacion_ate'=> $this->request->getPost('nivelPersonalizacion_ate'),
         ];
         $this->model->insert($data);
-        return redirect()->to(base_url('atencion'))->with('success', 'Plan de atención registrado.');
+        return redirect()->to(base_url('atencion'))->with('success', 'Plan de atención registrado correctamente.');
     }
 
     public function edit(int $id)
     {
-        return view('atencion/edit', ['item' => $this->model->find($id)]);
+        $item = $this->model->find($id);
+        if (!$item) return redirect()->to(base_url('atencion'))->with('error', 'Plan no encontrado.');
+        return view('atencion/edit', ['item' => $item]);
     }
 
     public function update(int $id)
     {
+        $rules = [
+            'tipoPlanAtencion_ate'    => 'required|max_length[100]',
+            'horarioDisponible_ate'   => 'required|max_length[50]',
+            'promocionActiva_ate'     => 'required|max_length[100]',
+            'nivelPersonalizacion_ate'=> 'required|max_length[100]',
+        ];
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
         $data = [
             'tipoPlanAtencion_ate'    => $this->request->getPost('tipoPlanAtencion_ate'),
             'horarioDisponible_ate'   => $this->request->getPost('horarioDisponible_ate'),
@@ -47,12 +67,12 @@ class AtencionController extends BaseController
             'nivelPersonalizacion_ate'=> $this->request->getPost('nivelPersonalizacion_ate'),
         ];
         $this->model->update($id, $data);
-        return redirect()->to(base_url('atencion'))->with('success', 'Plan de atención actualizado.');
+        return redirect()->to(base_url('atencion'))->with('success', 'Plan de atención actualizado correctamente.');
     }
 
     public function delete(int $id)
     {
         $this->model->delete($id);
-        return redirect()->to(base_url('atencion'))->with('success', 'Plan de atención eliminado.');
+        return redirect()->to(base_url('atencion'))->with('success', 'Plan eliminado correctamente.');
     }
 }

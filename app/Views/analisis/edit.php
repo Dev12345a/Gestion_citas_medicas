@@ -1,30 +1,51 @@
 <?php echo view('header'); ?>
-<div class="page-header"><h4 class="page-title">Editar Análisis de Mercado</h4></div>
-<div class="col-md-6">
-    <div class="card"><div class="card-body">
-        <form method="POST" action="<?= base_url('analisis/update/'.$item['id']) ?>">
-            <?= csrf_field() ?>
-            <div class="mb-2"><label class="form-label">Nivel de Demanda</label>
-                <select name="nivelDemanda_ana" class="form-select">
-                    <?php foreach(['Alta','Media','Baja'] as $opt): ?>
-                    <option <?= $item['nivelDemanda_ana']===$opt?'selected':'' ?>><?= $opt ?></option>
-                    <?php endforeach; ?>
-                </select></div>
-            <div class="mb-2"><label class="form-label">Fecha de Análisis</label>
-                <input type="date" name="fechaAnalisis_ana" class="form-control" value="<?= esc($item['fechaAnalisis_ana']) ?>"></div>
-            <div class="mb-2"><label class="form-label">Nivel de Competencia</label>
-                <select name="nivelCompetencia_ana" class="form-select">
-                    <?php foreach(['Alta','Media','Baja'] as $opt): ?>
-                    <option <?= $item['nivelCompetencia_ana']===$opt?'selected':'' ?>><?= $opt ?></option>
-                    <?php endforeach; ?>
-                </select></div>
-            <div class="mb-2"><label class="form-label">Tendencia en Salud</label>
-                <input type="text" name="tendenciaSalud_ana" class="form-control" value="<?= esc($item['tendenciaSalud_ana']) ?>"></div>
-            <div class="mb-2"><label class="form-label">Normativa Vigente</label>
-                <input type="text" name="normativaVigente_ana" class="form-control" value="<?= esc($item['normativaVigente_ana']) ?>"></div>
-            <button type="submit" class="btn btn-success">Actualizar</button>
-            <a href="<?= base_url('analisis') ?>" class="btn btn-secondary">Cancelar</a>
-        </form>
-    </div></div>
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="page-title mb-0"><i class="fas fa-edit me-2 text-warning"></i>Editar Análisis de Mercado</h4>
+    <a href="<?= base_url('analisis') ?>" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left me-1"></i> Volver</a>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <?php if (session()->getFlashdata('errors')): ?>
+            <div class="alert alert-danger"><ul class="mb-0"><?php foreach (session()->getFlashdata('errors') as $e): ?><li><?= esc($e) ?></li><?php endforeach; ?></ul></div>
+        <?php endif; ?>
+        <div class="card">
+            <div class="card-header"><h5 class="mb-0">Análisis #<?= $item['id'] ?></h5></div>
+            <div class="card-body">
+                <form method="POST" action="<?= base_url('analisis/update/'.$item['id']) ?>">
+                    <?= csrf_field() ?>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="fechaAnalisis_ana" class="form-label">Fecha de Análisis <span class="text-danger">*</span></label>
+                            <input type="date" id="fechaAnalisis_ana" name="fechaAnalisis_ana" class="form-control" required value="<?= old('fechaAnalisis_ana', $item['fechaAnalisis_ana']) ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nivelDemanda_ana" class="form-label">Nivel de Demanda <span class="text-danger">*</span></label>
+                            <select id="nivelDemanda_ana" name="nivelDemanda_ana" class="form-select" required>
+                                <?php foreach (['Alta','Media','Baja'] as $n): ?><option value="<?= $n ?>" <?= old('nivelDemanda_ana', $item['nivelDemanda_ana']) === $n ? 'selected' : '' ?>><?= $n ?></option><?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nivelCompetencia_ana" class="form-label">Nivel de Competencia <span class="text-danger">*</span></label>
+                            <select id="nivelCompetencia_ana" name="nivelCompetencia_ana" class="form-select" required>
+                                <?php foreach (['Alta','Media','Baja'] as $n): ?><option value="<?= $n ?>" <?= old('nivelCompetencia_ana', $item['nivelCompetencia_ana']) === $n ? 'selected' : '' ?>><?= $n ?></option><?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tendenciaSalud_ana" class="form-label">Tendencia en Salud <span class="text-danger">*</span></label>
+                            <input type="text" id="tendenciaSalud_ana" name="tendenciaSalud_ana" class="form-control" required value="<?= esc(old('tendenciaSalud_ana', $item['tendenciaSalud_ana'])) ?>">
+                        </div>
+                        <div class="col-12">
+                            <label for="normativaVigente_ana" class="form-label">Normativa Vigente <span class="text-danger">*</span></label>
+                            <input type="text" id="normativaVigente_ana" name="normativaVigente_ana" class="form-control" required value="<?= esc(old('normativaVigente_ana', $item['normativaVigente_ana'])) ?>">
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-warning text-white"><i class="fas fa-save me-1"></i> Actualizar</button>
+                        <a href="<?= base_url('analisis') ?>" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <?php echo view('footer'); ?>

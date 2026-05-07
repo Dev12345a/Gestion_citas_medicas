@@ -11,7 +11,7 @@
 <?php else: ?>
 <div class="table-responsive">
     <table class="table table-bordered table-striped" id="dataTable">
-        <thead class="table-dark">
+        <thead class="table-white">
             <tr>
                 <th>#</th>
                 <th>Código</th>

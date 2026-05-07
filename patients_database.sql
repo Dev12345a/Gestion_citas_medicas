@@ -1,169 +1,219 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Versión del servidor:         8.0.30 - MySQL Community Server - GPL
--- SO del servidor:              Win64
--- HeidiSQL Versión:             12.1.0.6537
--- --------------------------------------------------------
+-- =============================================================
+-- Sistema Digital de Gestión de Citas Médicas
+-- Base de datos: patients
+-- Versión: 2.0 — Con sistema de roles (doctor / paciente)
+-- =============================================================
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
--- Volcando estructura de base de datos para patients
-CREATE DATABASE IF NOT EXISTS `patients` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `patients` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `patients`;
 
--- Volcando estructura para tabla patients.analisismercado
-CREATE TABLE IF NOT EXISTS `analisismercado` (
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS `citas`;
+DROP TABLE IF EXISTS `paciente`;
+DROP TABLE IF EXISTS `serviciosmedicos`;
+DROP TABLE IF EXISTS `analisismercado`;
+DROP TABLE IF EXISTS `atencion`;
+DROP TABLE IF EXISTS `personal`;
+DROP TABLE IF EXISTS `planestrategico`;
+DROP TABLE IF EXISTS `sistema`;
+
+-- -------------------------------------------------------------
+-- TABLA: analisismercado
+-- -------------------------------------------------------------
+CREATE TABLE `analisismercado` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nivelDemanda_ana` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nivelDemanda_ana` varchar(50) NOT NULL,
   `fechaAnalisis_ana` date NOT NULL,
-  `nivelCompetencia_ana` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `tendenciaSalud_ana` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `normativaVigente_ana` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nivelCompetencia_ana` varchar(50) NOT NULL,
+  `tendenciaSalud_ana` varchar(100) NOT NULL,
+  `normativaVigente_ana` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla patients.analisismercado: ~3 rows (aproximadamente)
-INSERT INTO `analisismercado` (`id`, `nivelDemanda_ana`, `fechaAnalisis_ana`, `nivelCompetencia_ana`, `tendenciaSalud_ana`, `normativaVigente_ana`) VALUES
-	(1, 'Alta', '2026-05-01', 'Media', 'Telemedicina', 'Ley de Salud'),
-	(2, 'Media', '2026-04-15', 'Alta', 'Apps médicas', 'Regulación digital'),
-	(3, 'Baja', '2026-03-10', 'Baja', 'Atención domiciliaria', 'Normas locales');
+INSERT INTO `analisismercado` VALUES
+(1, 'Alta',  '2026-05-01', 'Media', 'Telemedicina',           'Ley de Salud'),
+(2, 'Media', '2026-04-15', 'Alta',  'Apps médicas',           'Regulación digital'),
+(3, 'Baja',  '2026-03-10', 'Baja',  'Atención domiciliaria',  'Normas locales');
 
--- Volcando estructura para tabla patients.atencion
-CREATE TABLE IF NOT EXISTS `atencion` (
+-- -------------------------------------------------------------
+-- TABLA: atencion
+-- -------------------------------------------------------------
+CREATE TABLE `atencion` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `tipoPlanAtencion_ate` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `horarioDisponible_ate` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `promocionActiva_ate` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `nivelPersonalizacion_ate` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `tipoPlanAtencion_ate` varchar(100) NOT NULL,
+  `horarioDisponible_ate` varchar(50) NOT NULL,
+  `promocionActiva_ate` varchar(100) NOT NULL,
+  `nivelPersonalizacion_ate` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Volcando datos para la tabla patients.atencion: ~3 rows (aproximadamente)
-INSERT INTO `atencion` (`id`, `tipoPlanAtencion_ate`, `horarioDisponible_ate`, `promocionActiva_ate`, `nivelPersonalizacion_ate`) VALUES
-	(1, 'General', '08:00–12:00', 'Descuento 10%', 'Prioridad alta'),
-	(2, 'Especializado', '12:00–16:00', 'Consulta gratis inicial', 'Seguimiento continuo'),
-	(3, 'Preventivo', '16:00–20:00', 'Paquete familiar', 'Atención personalizada');
-
--- Volcando estructura para tabla patients.citas
-CREATE TABLE IF NOT EXISTS `citas` (
-  `idCita_cit` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `fechaCita_cit` date NOT NULL,
-  `estadoCita_cit` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `tipoRecordatorio_cit` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `nivelSatisfaccion_cit` decimal(3,1) NOT NULL,
-  `idPaciente_cit` int NOT NULL,
-  `idServicio_cit` int NOT NULL,
-  PRIMARY KEY (`idCita_cit`),
-  KEY `fk_cita_paciente` (`idPaciente_cit`),
-  KEY `fk_cita_servicio` (`idServicio_cit`),
-  CONSTRAINT `fk_cita_paciente` FOREIGN KEY (`idPaciente_cit`) REFERENCES `paciente` (`idPaciente_pac`),
-  CONSTRAINT `fk_cita_servicio` FOREIGN KEY (`idServicio_cit`) REFERENCES `serviciosmedicos` (`idServicio_ser`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla patients.citas: ~3 rows (aproximadamente)
-INSERT INTO `citas` (`idCita_cit`, `fechaCita_cit`, `estadoCita_cit`, `tipoRecordatorio_cit`, `nivelSatisfaccion_cit`, `idPaciente_cit`, `idServicio_cit`) VALUES
-	('Cita #001', '2026-05-10', 'Pendiente', 'SMS', 4.5, 1, 101),
-	('Cita #002', '2026-05-11', 'Atendida', 'Email', 4.8, 2, 102),
-	('Cita #003', '2026-05-12', 'Cancelada', 'Notificación App', 4.2, 3, 103);
+INSERT INTO `atencion` VALUES
+(1, 'General',      '08:00–12:00', 'Descuento 10% primera consulta', 'Prioridad estándar'),
+(2, 'Especializado','14:00–18:00', 'Sin promoción activa',           'Prioridad alta'),
+(3, 'VIP',          '09:00–20:00', 'Paquete VIP sin costo adicional', 'Prioridad máxima');
 
--- Volcando estructura para tabla patients.paciente
-CREATE TABLE IF NOT EXISTS `paciente` (
-  `idPaciente_pac` int NOT NULL,
-  `nombreCompleto_pac` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `historialClinico_pac` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `categoriaPaciente_pac` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `correoElectronico_pac` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `telefono_pac` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `direccion_pac` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`idPaciente_pac`)
+-- -------------------------------------------------------------
+-- TABLA: personal — Doctores y personal médico
+-- Columnas username_per y password_per para autenticación
+-- Contraseña de demo: "password" (hash bcrypt)
+-- -------------------------------------------------------------
+CREATE TABLE `personal` (
+  `idMedico_per` int NOT NULL AUTO_INCREMENT,
+  `username_per` varchar(100) DEFAULT NULL,
+  `password_per` varchar(255) DEFAULT NULL,
+  `idPersonal_per` int DEFAULT NULL,
+  `especialidadMedica_per` varchar(100) NOT NULL,
+  `horarioLaboral_per` varchar(50) NOT NULL,
+  `nivelDesempeno_per` decimal(5,2) NOT NULL,
+  `tipoRol_per` varchar(50) NOT NULL,
+  PRIMARY KEY (`idMedico_per`),
+  UNIQUE KEY `uq_username_per` (`username_per`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla patients.paciente: ~3 rows (aproximadamente)
-INSERT INTO `paciente` (`idPaciente_pac`, `nombreCompleto_pac`, `historialClinico_pac`, `categoriaPaciente_pac`, `correoElectronico_pac`, `telefono_pac`, `direccion_pac`) VALUES
-	(1, 'Juan Pérez', 'Hipertensión', 'Frecuente', 'juan@email.com', '0991234567', 'Latacunga'),
-	(2, 'María López', 'Diabetes', 'Nuevo', 'maria@email.com', '0987654321', 'Quito'),
-	(3, 'Carlos Ruiz', 'Paciente sano', 'Ocasional', 'carlos@email.com', '0971122334', 'Ambato');
+-- Contraseña de todos los doctores demo: "password"
+INSERT INTO `personal` VALUES
+(10, 'dr.cardio',   'password', 20, 'Cardiología',      '08:00–16:00', 97.50, 'Médico'),
+(11, 'dr.pediatra', 'password', 21, 'Pediatría',        '09:00–17:00', 93.00, 'Médico'),
+(12, 'dr.admin',    'password', 22, 'Medicina General', '07:00–15:00', 88.50, 'Médico'),
+(99, 'doctor',      'doctor123', 99, 'Medicina General', '08:00–17:00', 95.00, 'Médico');
 
--- Volcando estructura para tabla patients.personal
-CREATE TABLE IF NOT EXISTS `personal` (
-  `idMedico_per` int NOT NULL,
-  `idPersonal_per` int NOT NULL,
-  `especialidadMedica_per` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `horarioLaboral_per` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `nivelDesempeno_per` decimal(5,1) NOT NULL,
-  `tipoRol_per` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`idMedico_per`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Volcando datos para la tabla patients.personal: ~3 rows (aproximadamente)
-INSERT INTO `personal` (`idMedico_per`, `idPersonal_per`, `especialidadMedica_per`, `horarioLaboral_per`, `nivelDesempeno_per`, `tipoRol_per`) VALUES
-	(10, 20, 'Cardiología', '08:00–16:00', 95.5, 'Médico'),
-	(11, 21, 'Pediatría', '09:00–17:00', 90.0, 'Médico'),
-	(12, 22, 'Administración', '08:00–14:00', 88.3, 'Administrativo');
-
--- Volcando estructura para tabla patients.planestrategico
-CREATE TABLE IF NOT EXISTS `planestrategico` (
+-- -------------------------------------------------------------
+-- TABLA: planestrategico
+-- -------------------------------------------------------------
+CREATE TABLE `planestrategico` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `ObjetivoGeneral_pla` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `misionSistema_pla` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `visionSistema_pla` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `ObjetivoGeneral_pla` varchar(255) NOT NULL,
+  `misionSistema_pla` varchar(255) NOT NULL,
+  `visionSistema_pla` varchar(255) NOT NULL,
   `indicadorRendimiento_pla` decimal(5,2) NOT NULL,
   `metaAnual_pla` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla patients.planestrategico: ~3 rows (aproximadamente)
-INSERT INTO `planestrategico` (`id`, `ObjetivoGeneral_pla`, `misionSistema_pla`, `visionSistema_pla`, `indicadorRendimiento_pla`, `metaAnual_pla`) VALUES
-	(1, 'Reducir tiempo de espera', 'Gestionar citas médicas eficientes', 'Ser líder en salud digital', 92.50, 50),
-	(2, 'Mejorar atención al paciente', 'Optimizar recursos médicos', 'Innovar en telemedicina', 88.00, 40),
-	(3, 'Digitalizar procesos', 'Automatizar citas', 'Expandir servicios online', 95.20, 60);
+INSERT INTO `planestrategico` VALUES
+(1, 'Reducir tiempo de espera 30%',    'Gestión eficiente de citas digitales', 'Ser líder en salud digital regional', 92.50, 50),
+(2, 'Aumentar satisfacción del paciente', 'Atención personalizada y oportuna', 'Excelencia en servicios de salud',  88.00, 80);
 
--- Volcando estructura para tabla patients.serviciosmedicos
-CREATE TABLE IF NOT EXISTS `serviciosmedicos` (
-  `nombreServicio_ser` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `idServicio_ser` int NOT NULL,
-  `estadoServicio_ser` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+-- -------------------------------------------------------------
+-- TABLA: sistema (Usuarios del sistema)
+-- -------------------------------------------------------------
+CREATE TABLE `sistema` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombreUsuario_sis` varchar(50) NOT NULL,
+  `rolUsuario_sis` varchar(50) NOT NULL,
+  `motorBaseDatos_sis` varchar(50) NOT NULL,
+  `nivelSeguridad_sis` varchar(50) NOT NULL,
+  `tipoIntegracion_sis` varchar(100) NOT NULL,
+  `estadoUsuario_sis` varchar(20) NOT NULL DEFAULT 'Activo',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `sistema` VALUES
+(1, 'admin',       'administrador', 'MySQL',      'Alta',  'Sistema interno',  'Activo'),
+(2, 'recepcion',   'recepcionista', 'MySQL',      'Media', 'Sistema interno',  'Activo'),
+(3, 'soporte_ti',  'técnico',       'MySQL',      'Media', 'API externa',      'Activo'),
+(4, 'dr.cardio',   'médico',        'MySQL',      'Alta',  'Plataforma salud', 'Activo'),
+(5, 'dr.pediatra', 'médico',        'MySQL',      'Alta',  'Plataforma salud', 'Activo');
+
+-- -------------------------------------------------------------
+-- TABLA: serviciosmedicos
+-- -------------------------------------------------------------
+CREATE TABLE `serviciosmedicos` (
+  `idServicio_ser` int NOT NULL AUTO_INCREMENT,
+  `nombreServicio_ser` varchar(100) NOT NULL,
+  `estadoServicio_ser` varchar(30) NOT NULL DEFAULT 'Disponible',
   `precioConsulta_ser` decimal(10,2) NOT NULL,
   `porcentajeRentabilidad_ser` decimal(5,2) NOT NULL,
-  `tipoPaquete_ser` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `duracionServicio_ser` int NOT NULL,
+  `tipoPaquete_ser` varchar(50) NOT NULL,
+  `duracionServicio_ser` int NOT NULL COMMENT 'Duración en minutos',
   PRIMARY KEY (`idServicio_ser`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla patients.serviciosmedicos: ~3 rows (aproximadamente)
-INSERT INTO `serviciosmedicos` (`nombreServicio_ser`, `idServicio_ser`, `estadoServicio_ser`, `precioConsulta_ser`, `porcentajeRentabilidad_ser`, `tipoPaquete_ser`, `duracionServicio_ser`) VALUES
-	('Consulta general', 101, 'Disponible', 25.50, 15.20, 'Básico', 30),
-	('Especialidad cardiología', 102, 'Disponible', 40.00, 20.50, 'Premium', 60),
-	('Teleconsulta', 103, 'NoDisponible', 20.00, 10.00, 'Virtual', 20);
+INSERT INTO `serviciosmedicos` VALUES
+(1, 'Consulta General de Cardiología',  'Disponible',    65.00, 35.50, 'Premium',   45),
+(2, 'Consulta Pediátrica',              'Disponible',    40.00, 28.00, 'Básico',    30),
+(3, 'Medicina General',                 'Disponible',    25.00, 22.00, 'Básico',    30),
+(4, 'Consulta de Nutrición',            'Disponible',    35.00, 26.00, 'Básico',    45),
+(5, 'Sesión de Psicología',             'Disponible',    50.00, 32.00, 'Premium',   60),
+(6, 'Telemedicina General',             'Disponible',    20.00, 40.00, 'Virtual',   20),
+(7, 'Chequeo Ejecutivo Completo',       'Disponible',   120.00, 45.00, 'Ejecutivo', 90),
+(8, 'Consulta Familiar',                'NoDisponible',  55.00, 30.00, 'Familiar',  60);
 
--- Volcando estructura para tabla patients.sistema
-CREATE TABLE IF NOT EXISTS `sistema` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nombreUsuario_sis` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `rolUsuario_sis` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `motorBaseDatos_sis` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `nivelSeguridad_sis` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `tipoIntegracion_sis` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `estadoUsuario_sis` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- -------------------------------------------------------------
+-- TABLA: paciente — Incluye campos de autenticación
+-- Contraseña de demo: "password" (hash bcrypt)
+-- -------------------------------------------------------------
+CREATE TABLE `paciente` (
+  `idPaciente_pac` int NOT NULL AUTO_INCREMENT,
+  `username_pac` varchar(100) DEFAULT NULL,
+  `password_pac` varchar(255) DEFAULT NULL,
+  `nombreCompleto_pac` varchar(150) NOT NULL,
+  `historialClinico_pac` varchar(255) DEFAULT NULL,
+  `categoriaPaciente_pac` varchar(50) NOT NULL DEFAULT 'Nuevo',
+  `correoElectronico_pac` varchar(150) DEFAULT NULL,
+  `telefono_pac` varchar(20) DEFAULT NULL,
+  `direccion_pac` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`idPaciente_pac`),
+  UNIQUE KEY `uq_username_pac` (`username_pac`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla patients.sistema: ~3 rows (aproximadamente)
-INSERT INTO `sistema` (`id`, `nombreUsuario_sis`, `rolUsuario_sis`, `motorBaseDatos_sis`, `nivelSeguridad_sis`, `tipoIntegracion_sis`, `estadoUsuario_sis`) VALUES
-	(1, 'admin', 'administrador', 'MySQL', 'Alta', 'API externa', 'Activo'),
-	(2, 'user1', 'recepcionista', 'PostgreSQL', 'Media', 'Sistema interno', 'Activo'),
-	(3, 'medico1', 'médico', 'SQL Server', 'Alta', 'Plataforma salud', 'Inactivo');
+-- Contraseña de todos los pacientes demo: "password"
+INSERT INTO `paciente` VALUES
+(1, 'juan.perez',   'password', 'Juan Carlos Pérez',     'Hipertensión 2024',            'Frecuente', 'juan.perez@email.com',   '0991234567', 'Av. Principal 101, Quito'),
+(2, 'maria.lopez',  'password', 'María López Rodríguez', 'Diabetes tipo 2',              'Frecuente', 'maria.lopez@email.com',  '0987654321', 'Calle 5 de Junio 202, Quito'),
+(3, 'carlos.ruiz',  'password', 'Carlos Ruiz Sánchez',   'Alergia a penicilina',         'Ocasional', 'carlos.ruiz@email.com',  '0976543210', 'Calle Los Pinos 303, Guayaquil'),
+(4, 'ana.torres',   'password', 'Ana Torres Vásquez',    'Sin antecedentes relevantes',  'Nuevo',     'ana.torres@email.com',   '0965432109', 'Urb. Las Flores 404, Cuenca'),
+(5, 'luis.mora',    'password', 'Luis Mora Espinoza',    'Asma crónica',                 'Frecuente', 'luis.mora@email.com',    '0954321098', 'Av. 6 de Diciembre 505, Quito');
 
-/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+-- -------------------------------------------------------------
+-- TABLA: citas — Incluye FK a médico (idMedico_cit)
+-- idCita_cit es VARCHAR para permitir formatos como "Cita #001"
+-- -------------------------------------------------------------
+CREATE TABLE `citas` (
+  `idCita_cit` varchar(50) NOT NULL,
+  `fechaCita_cit` date NOT NULL,
+  `estadoCita_cit` varchar(30) NOT NULL DEFAULT 'Pendiente',
+  `tipoRecordatorio_cit` varchar(50) NOT NULL,
+  `nivelSatisfaccion_cit` decimal(3,1) NOT NULL DEFAULT 5.0,
+  `idPaciente_cit` int NOT NULL,
+  `idServicio_cit` int NOT NULL,
+  `idMedico_cit` int DEFAULT NULL COMMENT 'Doctor responsable de la cita',
+  PRIMARY KEY (`idCita_cit`),
+  KEY `fk_cita_paciente` (`idPaciente_cit`),
+  KEY `fk_cita_servicio` (`idServicio_cit`),
+  KEY `fk_cita_medico`   (`idMedico_cit`),
+  CONSTRAINT `fk_cita_paciente` FOREIGN KEY (`idPaciente_cit`) REFERENCES `paciente` (`idPaciente_pac`) ON DELETE CASCADE,
+  CONSTRAINT `fk_cita_servicio` FOREIGN KEY (`idServicio_cit`) REFERENCES `serviciosmedicos` (`idServicio_ser`),
+  CONSTRAINT `fk_cita_medico`   FOREIGN KEY (`idMedico_cit`)   REFERENCES `personal` (`idMedico_per`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Citas del Dr. Cardio (idMedico=10) con pacientes 1, 2, 5
+INSERT INTO `citas` VALUES
+('Cita #001', '2026-05-15', 'Pendiente',  'SMS',              4.5, 1, 1, 10),
+('Cita #002', '2026-05-10', 'Atendida',   'Email',            5.0, 2, 3, 10),
+('Cita #005', '2026-06-01', 'Confirmada', 'WhatsApp',         4.8, 5, 1, 10),
+-- Citas del Dr. Pediatra (idMedico=11) con paciente 3, 4
+('Cita #003', '2026-04-28', 'Atendida',   'WhatsApp',         4.0, 3, 2, 11),
+('Cita #004', '2026-05-20', 'Pendiente',  'Notificación App', 4.5, 4, 2, 11),
+-- Citas del Dr. Admin / Medicina General (idMedico=12)
+('Cita #006', '2026-05-25', 'Pendiente',  'SMS',              5.0, 1, 6, 12),
+('Cita #007', '2026-05-18', 'Cancelada',  'Email',            2.5, 2, 6, 12);
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- =============================================================
+-- RESUMEN DE CREDENCIALES DE ACCESO
+-- =============================================================
+-- DOCTORES (rol: doctor):
+--   dr.cardio    / password  → Cardiología
+--   dr.pediatra  / password  → Pediatría
+--   dr.admin     / password  → Medicina General
+--
+-- PACIENTES (rol: paciente):
+--   juan.perez   / password
+--   maria.lopez  / password
+--   carlos.ruiz  / password
+--   ana.torres   / password
+--   luis.mora    / password
+-- =============================================================
