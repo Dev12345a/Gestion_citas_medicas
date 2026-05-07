@@ -132,10 +132,6 @@
             </p>
         </form>
 
-        <div class="demo-badge text-center mt-4">
-            Acceso admin: <span>admin</span> / <span>admin123</span>
-            &nbsp;|&nbsp; Paciente demo: <span>juan.perez</span> / <span>password</span>
-        </div>
     </div>
 </div>
 </body>
